@@ -1,1 +1,0 @@
-sesudah di lock cuy
