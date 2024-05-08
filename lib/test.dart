@@ -1,1 +1,1 @@
-yeay bisa cuy
+sesudah di lock cuy
