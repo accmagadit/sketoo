@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sketoo/ui/screen/information/Home.dart';
 import 'package:sketoo/ui/screen/splash_screen.dart';
 
 void main() {
@@ -14,8 +15,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: SplashScreen.routename,
       routes: {
-        SplashScreen.routename : (context) => const SplashScreen(),
+        SplashScreen.routename: (context) => const SplashScreen(),
       },
+      //home: const SplashScreen(),
       //auth
 
       //information
