@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.routename: (context) => const SplashScreen(),
       },
-      //home: const SplashScreen(),
+      home: const SplashScreen(),
       //auth
 
       //information
