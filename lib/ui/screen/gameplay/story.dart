@@ -4,6 +4,7 @@ import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/question.dart';
 import 'package:sketoo/ui/widget/question_board.dart';
+import 'package:sketoo/utils/assets.dart';
 
 class StoryScreen extends StatefulWidget {
   static const routename = "/story_screen";
@@ -28,10 +29,9 @@ class _StoryScreenState extends State<StoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/gameplay/background.png"),
-                  fit: BoxFit.cover),
+                  image: AssetImage(imgBackground), fit: BoxFit.cover),
             ),
             child: const QuestionBoard(
               pertanyaan:

@@ -7,6 +7,7 @@ import 'package:image/image.dart' as img;
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/buy_animal.dart';
+import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
@@ -160,7 +161,7 @@ class _DrawingAppState extends State<DrawingApp> {
                 children: [
                   Positioned.fill(
                     child: Image.asset(
-                      'assets/gameplay/background.png',
+                      imgBackground,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -177,7 +178,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                   cleanCanvas(signatureGlobalKey2);
                                 },
                                 child:
-                                    Image.asset("assets/gameplay/hapus.png")),
+                                    Image.asset(iconHapus)),
                           ),
                           BlocBuilder<Player_2Cubit, Player_2State>(
                             builder: (context, state) {
@@ -185,7 +186,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                 quarterTurns: 2,
                                 child: Row(
                                   children: [
-                                    Image.asset("assets/gameplay/koin.png"),
+                                    Image.asset(iconKoin),
                                     Text("${state.koin}",
                                         style: jomhuriaBlackGreen20),
                                   ],
@@ -241,7 +242,7 @@ class _DrawingAppState extends State<DrawingApp> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const SizedBox(),
-                              Image.asset('assets/gameplay/tali.png'),
+                              Image.asset(imgTali),
                               const SizedBox(),
                             ],
                           ),
@@ -333,7 +334,7 @@ class _DrawingAppState extends State<DrawingApp> {
                             children: [
                               Row(
                                 children: [
-                                  Image.asset("assets/gameplay/koin.png"),
+                                  Image.asset(iconKoin),
                                   Text('${state.koin}',
                                       style: jomhuriaBlackGreen20),
                                 ],
@@ -343,7 +344,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                     cleanCanvas(signatureGlobalKey1);
                                   },
                                   child:
-                                      Image.asset("assets/gameplay/hapus.png")),
+                                      Image.asset(iconHapus)),
                             ],
                           );
                         },

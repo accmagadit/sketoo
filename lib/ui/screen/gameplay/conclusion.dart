@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/colors.dart';
 
 class Conclusion extends StatelessWidget {
@@ -12,7 +13,7 @@ class Conclusion extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/gameplay/result.png',
+              imgBackgroundResult,
               fit: BoxFit.cover,
             ),
           ),
@@ -43,7 +44,7 @@ class Conclusion extends StatelessWidget {
                               Row(
                                 children: [
                                   Image.asset(
-                                    "assets/gameplay/gajah_result.png",
+                                    imgGajahResult,
                                     height: 60,
                                   ),
                                   Column(
@@ -57,7 +58,7 @@ class Conclusion extends StatelessWidget {
                               Row(
                                 children: [
                                   Image.asset(
-                                    "assets/gameplay/gajah_result.png",
+                                    imgGajahResult,
                                     height: 60,
                                   ),
                                   Column(

@@ -4,6 +4,7 @@ import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/conclusion.dart';
 import 'package:sketoo/ui/widget/pop_up_pemenang.dart';
+import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
@@ -29,7 +30,7 @@ class _ResultState extends State<Result> {
                 children: [
                   Positioned.fill(
                     child: Image.asset(
-                      'assets/gameplay/background.png',
+                      imgBackground,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -41,13 +42,13 @@ class _ResultState extends State<Result> {
                         children: [
                           RotatedBox(
                             quarterTurns: 2,
-                            child: Image.asset("assets/gameplay/hapus.png"),
+                            child: Image.asset(iconHapus),
                           ),
                           RotatedBox(
                             quarterTurns: 2,
                             child: Row(
                               children: [
-                                Image.asset("assets/gameplay/koin.png"),
+                                Image.asset(iconKoin),
                                 Text('0', style: jomhuriaBlackGreen20),
                               ],
                             ),
@@ -70,7 +71,7 @@ class _ResultState extends State<Result> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(),
-                              Image.asset('assets/gameplay/tali.png'),
+                              Image.asset(imgTali),
                             ],
                           ),
                           Row(
@@ -143,10 +144,10 @@ class _ResultState extends State<Result> {
                           Row(
                             children: [
                               Text('0', style: jomhuriaBlackGreen20),
-                              Image.asset("assets/gameplay/koin.png"),
+                              Image.asset(iconKoin),
                             ],
                           ),
-                          Image.asset("assets/gameplay/hapus.png"),
+                          Image.asset(iconHapus),
                         ],
                       ),
                     ],
