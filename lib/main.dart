@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sketoo/ui/screen/information/Home.dart';
+import 'package:sketoo/ui/screen/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
@@ -58,6 +60,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: StoryScreen.routename,
       routes: {
+        SplashScreen.routename: (context) => const SplashScreen(),
+      },
+      home: const SplashScreen(),
         StoryScreen.routename: (context) => const StoryScreen(),
         QuestionScreen.routename: (context) => const QuestionScreen(),
         DrawingApp.routename: (context) => const DrawingApp(),
@@ -65,7 +70,6 @@ class MyApp extends StatelessWidget {
         Result.routename: (context) => const Result(),
         Conclusion.routename: (context) => const Conclusion(),
       },
-
       //auth
 
       //information
