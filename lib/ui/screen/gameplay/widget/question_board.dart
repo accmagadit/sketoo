@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
@@ -36,7 +37,7 @@ class QuestionBoard extends StatelessWidget {
                 textAlign: isQuestion ? TextAlign.center : TextAlign.start,
                 style: juaGreen15,
               ),
-            ),
+            ).animate().fade(duration: 1000.ms),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, route);
@@ -51,13 +52,18 @@ class QuestionBoard extends StatelessWidget {
                 "Next",
                 style: poppinsWhite20,
               ),
-            ),
-            SingleChildScrollView(
-              child: Text(
-                pertanyaan,
-                style: juaGreen15,
-              ),
-            ),
+            )
+                .animate(
+                  onPlay: (controller) => controller.repeat(),
+                )
+                .shake(
+                  rotation: 0.1,
+                  hz: 1.7,
+                ),
+            Text(
+              pertanyaan,
+              style: juaGreen15,
+            ).animate().fade(duration: 1000.ms),
           ],
         ),
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/ui/screen/widget/CustomButton.dart';
-import 'package:sketoo/ui/screen/widget/InputText.dart';
+import 'package:sketoo/ui/screen/information/input_player.dart';
+import 'package:sketoo/ui/screen/information/widget/CustomButton.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
-class PopupInputPlayer extends StatelessWidget {
-  const PopupInputPlayer({super.key});
+class PopupHome extends StatelessWidget {
+  const PopupHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,25 +12,25 @@ class PopupInputPlayer extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: 280,
-            height: 300,
+            width: 320,
+            height: 200,
             decoration: BoxDecoration(
               border: Border.all(
-                  color: Color(0xFF3C273F).withOpacity(0.1), width: 3),
-              gradient: LinearGradient(
+                  color: const Color(0xFF3C273F).withOpacity(0.1), width: 3),
+              gradient: const LinearGradient(
                 colors: [Color(0xFFD2ABF3), Color(0xFFE2D6ED)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                     blurRadius: 15,
                     blurStyle: BlurStyle.outer,
                     color: Color(0xFF767676)),
                 BoxShadow(
                     blurStyle: BlurStyle.inner,
-                    color: Color.fromARGB(255, 232, 226, 237),
+                    color: Color(0xFFE8E2ED),
                     offset: Offset(-1.5, -2)),
               ],
             ),
@@ -38,11 +38,8 @@ class PopupInputPlayer extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 6),
-                  child: Text(
-                    'Player',
-                    style: textPoppins
-                  ),
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text('Welcome,', style: textPoppins),
                 ),
               ),
             ),
@@ -51,12 +48,12 @@ class PopupInputPlayer extends StatelessWidget {
             top: 50,
             left: 9,
             child: Container(
-              width: 260,
-              height: 235,
+              width: 300,
+              height: 130,
               decoration: BoxDecoration(
-                color: Color(0xFFDCAEDFF),
+                color: const Color(0xffdcaedff),
                 borderRadius: BorderRadius.circular(5),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                       blurStyle: BlurStyle.inner,
                       color: Colors.white,
@@ -67,25 +64,14 @@ class PopupInputPlayer extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InputText(
-                        initialText: "Nama Player 1",
-                        backgroundColor: Color(0xFFFFD900),
-                        width: 200,
-                        height: 40),
-                    SizedBox(height: 20),
-                    InputText(
-                        initialText: "Nama Player 2",
-                        backgroundColor: Color(0xFFFFD900),
-                        width: 200,
-                        height: 40),
-                    SizedBox(height: 30),
-                    Container(
-                      child: CustomButton(
-                          color: Color(0xFFFF6EC9),
-                          text: 'Start!',
-                          height: 45,
-                          width: 135),
-                    ),
+                    CustomButton(
+                        onTap: () {
+                          Navigator.pushNamed(context, InputPlayer.routename);
+                        },
+                        color: const Color(0xFFFFD900),
+                        text: 'Play',
+                        height: 50,
+                        width: 120)
                   ],
                 ),
               ),

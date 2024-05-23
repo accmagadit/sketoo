@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sketoo/ui/screen/information/Home.dart';
-import 'package:sketoo/ui/screen/widget/CustomButton.dart';
+import 'package:sketoo/ui/screen/information/widget/CustomButton.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class PopupKeluar extends StatelessWidget {
@@ -17,14 +16,14 @@ class PopupKeluar extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               border: Border.all(
-                  color: Color(0xFF3C273F).withOpacity(0.1), width: 3),
-              gradient: LinearGradient(
+                  color: const Color(0xFF3C273F).withOpacity(0.1), width: 3),
+              gradient: const LinearGradient(
                 colors: [Color(0xFFD2ABF3), Color(0xFFE2D6ED)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                     blurRadius: 15,
                     blurStyle: BlurStyle.outer,
@@ -39,7 +38,7 @@ class PopupKeluar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 6),
+                  padding: const EdgeInsets.only(top: 6),
                   child: Text('Keluar?', style: textPoppins),
                 ),
               ),
@@ -52,9 +51,9 @@ class PopupKeluar extends StatelessWidget {
               width: 300,
               height: 135,
               decoration: BoxDecoration(
-                color: Color(0xFFDCAEDFF),
+                color: const Color(0xffdcaedff),
                 borderRadius: BorderRadius.circular(5),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                       blurStyle: BlurStyle.inner,
                       color: Colors.white,
@@ -69,21 +68,23 @@ class PopupKeluar extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     child: CustomButton(
+                      onTap: () {},
                       color: Color(0xFFFF6EC9),
                       text: 'Tidak',
                       height: 40,
                       width: 100,
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTap: () {
                       // Exit the app
-                      Future.delayed(Duration(milliseconds: 100), () {
+                      Future.delayed(const Duration(milliseconds: 100), () {
                         SystemNavigator.pop();
                       });
                     },
                     child: CustomButton(
+                      onTap: () {},
                       color: Color(0xFFFFEF96),
                       text: 'Ya',
                       height: 40,

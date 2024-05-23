@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
-import 'package:sketoo/ui/widget/animal_price.dart';
+import 'package:sketoo/ui/screen/gameplay/widget/animal_price.dart';
+import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
@@ -28,7 +29,7 @@ class _BuyAnimalState extends State<BuyAnimal> {
                 children: [
                   Positioned.fill(
                     child: Image.asset(
-                      'assets/gameplay/background.png',
+                      imgBackgroundGameplay,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -40,7 +41,7 @@ class _BuyAnimalState extends State<BuyAnimal> {
                         children: [
                           RotatedBox(
                             quarterTurns: 2,
-                            child: Image.asset("assets/gameplay/hapus.png"),
+                            child: Image.asset(iconHapus),
                           ),
                           BlocBuilder<Player_2Cubit, Player_2State>(
                             builder: (context, state) {
@@ -48,7 +49,7 @@ class _BuyAnimalState extends State<BuyAnimal> {
                                 quarterTurns: 2,
                                 child: Row(
                                   children: [
-                                    Image.asset("assets/gameplay/koin.png"),
+                                    Image.asset(iconKoin),
                                     Text("${state.koin}",
                                         style: jomhuriaBlackGreen20),
                                   ],
@@ -201,12 +202,12 @@ class _BuyAnimalState extends State<BuyAnimal> {
                                 children: [
                                   Text("${state.koin}",
                                       style: jomhuriaBlackGreen20),
-                                  Image.asset("assets/gameplay/koin.png"),
+                                  Image.asset(iconKoin),
                                 ],
                               );
                             },
                           ),
-                          Image.asset("assets/gameplay/hapus.png"),
+                          Image.asset(iconHapus),
                         ],
                       ),
                     ],

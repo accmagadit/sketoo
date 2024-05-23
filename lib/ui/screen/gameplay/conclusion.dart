@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/utils/colors.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sketoo/ui/screen/gameplay/widget/scores_conclusion.dart';
+import 'package:sketoo/ui/screen/information/welcome.dart';
+import 'package:sketoo/utils/assets.dart';
 
 class Conclusion extends StatelessWidget {
   static const routename = "/conclusion";
@@ -12,72 +15,35 @@ class Conclusion extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/gameplay/result.png',
+              imgBackgroundResult,
               fit: BoxFit.cover,
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  height: MediaQuery.of(context).size.width / 1.8,
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  color: purple,
-                  child: Column(
-                    children: [
-                      Text("Scores"),
-                      Container(
-                          decoration: BoxDecoration(
-                            color: lightGreen,
-                            border: Border.all(
-                              color: yellow, // Warna kuning
-                              width: 10, // Ketebalan border
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(18), // Radius 18
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/gameplay/gajah_result.png",
-                                    height: 60,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text("yaya boboboy"),
-                                      Text("yaya boboboy"),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    "assets/gameplay/gajah_result.png",
-                                    height: 60,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text("yaya boboboy"),
-                                      Text("yaya boboboy"),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ],
-                          )),
-                    ],
+          SizedBox.expand(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(imgLogoApp),
+                    ),
                   ),
-                ),
-              )
-            ],
+                ).animate().scale(duration: 1500.ms, curve: Curves.bounceOut),
+                const SizedBox(height: 30),
+                const ScoreConclusion().animate().flip(delay: 1500.ms)
+              ],
+            ),
           ),
         ],
       ),
+      floatingActionButton: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, HomeScreen.routename);
+          },
+          child: Image.asset(imgHomeButton)),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sketoo/ui/screen/gameplay/canvas.dart';
-import 'package:sketoo/ui/widget/question_board.dart';
+import 'package:sketoo/ui/screen/gameplay/widget/question_board.dart';
+import 'package:sketoo/utils/assets.dart';
 
 class QuestionScreen extends StatelessWidget {
   static const routename = "/question_screen";
@@ -10,9 +11,9 @@ class QuestionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/gameplay/background.png"),
+                  image: AssetImage(imgBackgroundGameplay),
                   fit: BoxFit.cover),
             ),
             child: const QuestionBoard(

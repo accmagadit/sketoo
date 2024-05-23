@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/ui/screen/information/Home.dart';
+import 'package:sketoo/ui/screen/information/exit.dart';
+import 'package:sketoo/ui/screen/information/welcome.dart';
+import 'package:sketoo/ui/screen/information/input_player.dart';
 import 'package:sketoo/ui/screen/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
@@ -58,17 +60,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: StoryScreen.routename,
+      initialRoute: SplashScreen.routename,
       routes: {
         SplashScreen.routename: (context) => const SplashScreen(),
-      },
-      home: const SplashScreen(),
+        
+        // Gameplay
         StoryScreen.routename: (context) => const StoryScreen(),
         QuestionScreen.routename: (context) => const QuestionScreen(),
         DrawingApp.routename: (context) => const DrawingApp(),
         BuyAnimal.routename: (context) => const BuyAnimal(),
         Result.routename: (context) => const Result(),
         Conclusion.routename: (context) => const Conclusion(),
+
+        // Information
+        Exit.routename : (context) => const Exit(),
+        HomeScreen.routename : (context) => const HomeScreen(),
+        InputPlayer.routename : (context) => const InputPlayer()
       },
       //auth
 

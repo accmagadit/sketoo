@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/ui/screen/widget/PopupKeluar.dart';
+import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
 
 class Exit extends StatelessWidget {
   const Exit({super.key});
+  static const routename = "/exit";
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/result.dart';
 import 'package:sketoo/ui/screen/gameplay/story.dart';
+import 'package:sketoo/utils/assets.dart';
 
 class HargaHewan extends StatelessWidget {
   final String namaGambar;
@@ -72,14 +74,21 @@ class HargaHewan extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Image.asset("assets/gameplay/koin_hewan.png"),
+                Image.asset(imgKoinHewan),
                 Text(
                   harga.toString(),
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ],
             ),
-          ),
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(),
+              )
+              .shake(
+                rotation: 0.1,
+                hz: 1.7,
+              ),
         ],
       );
     } else {

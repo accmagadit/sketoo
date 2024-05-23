@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/conclusion.dart';
-import 'package:sketoo/ui/widget/pop_up_pemenang.dart';
+import 'package:sketoo/ui/screen/gameplay/widget/pop_up_pemenang.dart';
+import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
@@ -29,7 +31,7 @@ class _ResultState extends State<Result> {
                 children: [
                   Positioned.fill(
                     child: Image.asset(
-                      'assets/gameplay/background.png',
+                      imgBackgroundGameplay,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -41,13 +43,13 @@ class _ResultState extends State<Result> {
                         children: [
                           RotatedBox(
                             quarterTurns: 2,
-                            child: Image.asset("assets/gameplay/hapus.png"),
+                            child: Image.asset(iconHapus),
                           ),
                           RotatedBox(
                             quarterTurns: 2,
                             child: Row(
                               children: [
-                                Image.asset("assets/gameplay/koin.png"),
+                                Image.asset(iconKoin),
                                 Text('0', style: jomhuriaBlackGreen20),
                               ],
                             ),
@@ -55,10 +57,13 @@ class _ResultState extends State<Result> {
                         ],
                       ),
 
-                      const RotatedBox(
+                      RotatedBox(
                         quarterTurns: 2,
-                        child: PopUpPemenang(
-                            namaGambar: "badak_result.png", isPemenang: true),
+                        child: const PopUpPemenang(
+                                namaGambar: "badak_result.png",
+                                isPemenang: true)
+                            .animate()
+                            .scale(duration: 1000.ms, curve: Curves.bounceOut),
                       ),
 
                       const SizedBox(height: 10),
@@ -69,8 +74,8 @@ class _ResultState extends State<Result> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(),
-                              Image.asset('assets/gameplay/tali.png'),
+                              const SizedBox(),
+                              Image.asset(imgTali),
                             ],
                           ),
                           Row(
@@ -108,12 +113,20 @@ class _ResultState extends State<Result> {
                                     ],
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      'OK',
-                                      style: poppinsWhite20, // Teks putih
-                                    ),
-                                  ),
-                                ),
+                                      child: Text(
+                                    'OK',
+                                    style: poppinsWhite20, // Teks putih
+                                  )),
+                                )
+                                    .animate(
+                                      onPlay: (controller) => controller.repeat(
+                                        reverse: true,
+                                      ),
+                                    )
+                                    .scale(
+                                        duration: 1000.ms,
+                                        begin: const Offset(1, 1),
+                                        end: const Offset(1.3, 1.3)),
                               ),
                               BlocBuilder<Player_1Cubit, Player_1State>(
                                 builder: (context, state) {
@@ -134,21 +147,26 @@ class _ResultState extends State<Result> {
 
                       const SizedBox(height: 10),
                       //player 2
-                      PopUpPemenang(
-                          namaGambar: "gajah_result.png", isPemenang: false),
+                      const PopUpPemenang(
+                              namaGambar: "gajah_result.png", isPemenang: false)
+                          .animate()
+                          .scale(duration: 1000.ms, curve: Curves.bounceOut),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
+                              Image.asset(iconKoin),
                               Text('0', style: jomhuriaBlackGreen20),
-                              Image.asset("assets/gameplay/koin.png"),
                             ],
                           ),
-                          Image.asset("assets/gameplay/hapus.png"),
+                          Image.asset(iconHapus),
                         ],
                       ),
+                      const SizedBox(
+                        height: 40,
+                      )
                     ],
                   ),
                 ],

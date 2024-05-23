@@ -54,6 +54,11 @@ TextStyle juaGreen15 = TextStyle(
   fontSize: 15,
   fontFamily: 'Jua',
 );
+TextStyle juaBlack15 = TextStyle(
+  color: Colors.black,
+  fontSize: 15,
+  fontFamily: 'Jua',
+);
 
 TextStyle poppinsWhite20 =
     TextStyle(color: white, fontSize: 20, fontFamily: 'Poppins');

@@ -1,49 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/ui/screen/information/Home.dart';
+import 'package:sketoo/ui/screen/information/welcome.dart';
+import 'package:sketoo/utils/assets.dart';
 
 class SplashScreen extends StatelessWidget {
   static const routename = "/splash_screen";
 
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    _navigateToHome() async {
-      await Future.delayed(Duration(milliseconds: 2500)); 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeState()),
-      );
-    }
-
-    _navigateToHome();
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      Navigator.pushReplacementNamed(context, HomeScreen.routename);
+    });
 
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFFCAEDFF),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               height: 200,
               width: 200,
-              child: Image.asset('lib/assets/logo_sketoo.png'),
+              child: Image.asset(imgLogoApp),
             ),
           ],
         ),
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    initialRoute: SplashScreen.routename,
-    routes: {
-      SplashScreen.routename: (context) => SplashScreen(), 
-    },
-  ));
 }
