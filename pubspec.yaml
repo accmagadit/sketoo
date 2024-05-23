@@ -35,6 +35,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  tflite_flutter: ^0.10.4
+  syncfusion_flutter_signaturepad: ^25.2.3
+  image: ^4.1.7
+  bloc: ^8.1.4
+  equatable: ^2.0.5
+  flutter_bloc: ^8.1.5
 
 dev_dependencies:
   flutter_test:
@@ -62,7 +68,8 @@ flutter:
   assets:
     - ./lib/assets/background-biru.png
     - ./lib/assets/logo_sketoo.png
-
+    - assets/gameplay/
+    - assets/model/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -94,6 +101,15 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+    - family: Jua
+      fonts:
+        - asset: assets/font/Jua-Regular.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/font/Poppins-Regular.ttf
+    - family: Jomhuria
+      fonts:
+        - asset: assets/font/Jomhuria-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
