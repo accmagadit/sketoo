@@ -17,7 +17,12 @@ class Player_2Cubit extends Cubit<Player_2State> {
         hasClick: hasClick));
   }
 
-  void changeKoinValue(int amount) {
+  void reset() {
+    emit(const Player_2State(
+        babak: 0, pasukanHewan: [], koin: 0, hasClick: false));
+  }
+
+  void addKoinValue(int amount) {
     int jumlahKoin = state.koin;
     List<String> updatedPasukanHewan = state.pasukanHewan;
     int babak = state.babak;
@@ -53,15 +58,25 @@ class Player_2Cubit extends Cubit<Player_2State> {
         hasClick: hasClick));
   }
 
-  void changeHasClick() {
+  void changeTrueClick() {
     int jumlahKoin = state.koin;
     List<String> updatedPasukanHewan = state.pasukanHewan;
     int babak = state.babak;
-    bool hasClick = state.hasClick;
     emit(Player_2State(
         koin: jumlahKoin,
         pasukanHewan: updatedPasukanHewan,
         babak: babak,
-        hasClick: !hasClick));
+        hasClick: true));
+  }
+
+  void changeFalseClick() {
+    int jumlahKoin = state.koin;
+    List<String> updatedPasukanHewan = state.pasukanHewan;
+    int babak = state.babak;
+    emit(Player_2State(
+        koin: jumlahKoin,
+        pasukanHewan: updatedPasukanHewan,
+        babak: babak,
+        hasClick: false));
   }
 }

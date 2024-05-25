@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sketoo/utils/colors.dart';
 
-//penamaan font
-//lalezarBlack104
-//==============
-//lalezar = nama font
-//Black = warna font
-//2 digit pertama = ukuran font
-//digit terakhir = ketebalan font
 TextStyle lalezarBlack104 = const TextStyle(
     fontFamily: "lalezar",
     fontSize: 10,
@@ -22,7 +15,7 @@ TextStyle textbuttonPoppins = TextStyle(
   shadows: [
     Shadow(
       color: Colors.black.withOpacity(0.3),
-      offset: Offset(2, 2),
+      offset: const Offset(2, 2),
       blurRadius: 10.0,
     ),
   ],
@@ -36,7 +29,7 @@ TextStyle textPoppins = TextStyle(
   shadows: [
     Shadow(
       color: Colors.black.withOpacity(0.3),
-      offset: Offset(2, 2),
+      offset: const Offset(2, 2),
       blurRadius: 10.0,
     ),
   ],
@@ -54,7 +47,7 @@ TextStyle juaGreen15 = TextStyle(
   fontSize: 15,
   fontFamily: 'Jua',
 );
-TextStyle juaBlack15 = TextStyle(
+TextStyle juaBlack15 = const TextStyle(
   color: Colors.black,
   fontSize: 15,
   fontFamily: 'Jua',
@@ -63,12 +56,28 @@ TextStyle juaBlack15 = TextStyle(
 TextStyle poppinsWhite20 =
     TextStyle(color: white, fontSize: 20, fontFamily: 'Poppins');
 
-TextStyle poppinsBlack16 = TextStyle(
+TextStyle poppinsBlack16 = const TextStyle(
     color: Colors.black,
     fontSize: 16,
     fontFamily: 'Poppins',
     fontWeight: FontWeight.bold);
 
+TextStyle poppinsBlack18 = const TextStyle(
+    color: Colors.black,
+    fontSize: 18,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.bold);
+
+// jomhuria
 TextStyle jomhuriaBlackGreen20 =
     TextStyle(color: blackGreen, fontFamily: 'Jomhuria', fontSize: 30);
 
+TextStyle jomhuriaWhite20 =
+    TextStyle(color: Colors.white, fontFamily: 'Jomhuria', fontSize: 30);
+
+// Monsters
+TextStyle monstersYellow30 = TextStyle(
+  color: yellow,
+  fontFamily: 'Monsters',
+  fontSize: 30
+);

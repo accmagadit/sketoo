@@ -20,9 +20,12 @@ class _StoryScreenState extends State<StoryScreen> {
     super.initState();
     context.read<Player_1Cubit>().addBabak();
     context.read<Player_2Cubit>().addBabak();
-
-    print(context.read<Player_1Cubit>().state.babak);
-    print(context.read<Player_2Cubit>().state.babak);
+    debugPrint(
+        "klik player 1: ${context.read<Player_1Cubit>().state.hasClick}");
+    debugPrint(
+        "klik player 2: ${context.read<Player_2Cubit>().state.hasClick}");
+    debugPrint("Babak p1: ${context.read<Player_1Cubit>().state.babak}");
+    debugPrint("Babak p2: ${context.read<Player_2Cubit>().state.babak}");
   }
 
   @override
@@ -31,8 +34,7 @@ class _StoryScreenState extends State<StoryScreen> {
         body: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(imgBackgroundGameplay),
-                  fit: BoxFit.cover),
+                  image: AssetImage(imgBackgroundGameplay), fit: BoxFit.cover),
             ),
             child: const QuestionBoard(
               pertanyaan:

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
 
 class Exit extends StatelessWidget {
   const Exit({super.key});
@@ -30,8 +29,8 @@ class Exit extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            PopupKeluar(),
+            const SizedBox(height: 20),
+
           ],
         ),
       ),

@@ -22,8 +22,8 @@ class QuestionBoard extends StatelessWidget {
         decoration: BoxDecoration(
           color: lightGreen,
           border: Border.all(
-            color: yellow, // Warna kuning
-            width: 10, // Ketebalan border
+            color: yellow, 
+            width: 10, 
           ),
           borderRadius: BorderRadius.circular(18), // Radius 18
         ),

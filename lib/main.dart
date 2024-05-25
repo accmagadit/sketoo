@@ -1,4 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:sketoo/ui/screen/gameplay/share.dart';
 import 'package:sketoo/ui/screen/information/exit.dart';
 import 'package:sketoo/ui/screen/information/welcome.dart';
 import 'package:sketoo/ui/screen/information/input_player.dart';
@@ -12,6 +14,7 @@ import 'package:sketoo/ui/screen/gameplay/conclusion.dart';
 import 'package:sketoo/ui/screen/gameplay/question.dart';
 import 'package:sketoo/ui/screen/gameplay/result.dart';
 import 'package:sketoo/ui/screen/gameplay/story.dart';
+import 'package:sketoo/utils/assets.dart';
 
 void main() {
   runApp(MultiBlocProvider(
@@ -53,8 +56,33 @@ void main() {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late AudioPlayer _audioPlayer;
+
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();
+    _playMusic();
+  }
+
+  Future<void> _playMusic() async {
+    await _audioPlayer.setSource(AssetSource(musicPath));
+    _audioPlayer.setReleaseMode(ReleaseMode.loop);
+    _audioPlayer.resume();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +91,7 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.routename,
       routes: {
         SplashScreen.routename: (context) => const SplashScreen(),
-        
+
         // Gameplay
         StoryScreen.routename: (context) => const StoryScreen(),
         QuestionScreen.routename: (context) => const QuestionScreen(),
@@ -71,11 +99,12 @@ class MyApp extends StatelessWidget {
         BuyAnimal.routename: (context) => const BuyAnimal(),
         Result.routename: (context) => const Result(),
         Conclusion.routename: (context) => const Conclusion(),
+        ShareScreen.routename: (context) => const ShareScreen(),
 
         // Information
-        Exit.routename : (context) => const Exit(),
-        HomeScreen.routename : (context) => const HomeScreen(),
-        InputPlayer.routename : (context) => const InputPlayer()
+        Exit.routename: (context) => const Exit(),
+        HomeScreen.routename: (context) => const HomeScreen(),
+        InputPlayer.routename: (context) => const InputPlayer()
       },
       //auth
 

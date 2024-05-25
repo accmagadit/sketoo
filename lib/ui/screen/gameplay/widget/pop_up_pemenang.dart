@@ -14,16 +14,13 @@ class PopUpPemenang extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(width: 2, color: const Color(0xFF7D4E23)),
+      ),
       child: Container(
-        height: MediaQuery.of(context).size.width / 1.8,
-        width: MediaQuery.of(context).size.width / 1.2,
-        decoration: BoxDecoration(
-          border: Border.all(width: 2, color: const Color(0xFF7D4E23)),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: lightGreen,
             border: Border.all(
@@ -35,11 +32,15 @@ class PopUpPemenang extends StatelessWidget {
           child: Column(
             children: [
               Image.asset("assets/gameplay/$namaGambar"),
-              Text(isPemenang ? "Selamat, kamu menang!" : "Usahamu keren, coba lagi ya!", style: poppinsBlack16)
+              Text(
+                isPemenang
+                    ? "Selamat, kamu memenangkan permainan!"
+                    : "Usahamu keren, coba lagi ya!",
+                style: poppinsBlack16,
+                textAlign: TextAlign.center,
+              )
             ],
-          )
-        ),
-      ),
+          )),
     );
   }
 }
