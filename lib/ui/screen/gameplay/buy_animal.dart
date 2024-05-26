@@ -63,66 +63,301 @@ class _BuyAnimalState extends State<BuyAnimal> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
+
+    int koinPlayer1 = context.read<Player_1Cubit>().state.koin;
+    int koinPlayer2 = context.read<Player_2Cubit>().state.koin;
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(imgBackgroundGameplay), fit: BoxFit.cover),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //player 1
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: Image.asset(iconHapus),
+      body: screenHeight < 750
+          ? SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(imgBackgroundGameplay),
+                      fit: BoxFit.cover),
                 ),
-                BlocBuilder<Player_2Cubit, Player_2State>(
-                  builder: (context, state) {
-                    return RotatedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //player 1
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: Image.asset(iconHapus),
+                        ),
+                        BlocBuilder<Player_2Cubit, Player_2State>(
+                          builder: (context, state) {
+                            return RotatedBox(
+                              quarterTurns: 2,
+                              child: Row(
+                                children: [
+                                  Image.asset(iconKoin),
+                                  Text("${state.koin}",
+                                      style: jomhuriaBlackGreen20),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: BlocBuilder<Player_2Cubit, Player_2State>(
+                            builder: (context, state) {
+                              return Text(state.nama,
+                                  style: jomhuriaBlackGreen20);
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: isSkip2Choosen,
+                          child: RotatedBox(
+                            quarterTurns: 2,
+                            child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isRabbit2Choosen = false;
+                                    isMonkey2Choosen = false;
+                                    isRhino2Choosen = false;
+                                  });
+                                  logicGamePlay(2, 0, "", true);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        offset: const Offset(0, 4),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
+                                  ),
+                                  child:
+                                      Text('Skip', style: jomhuriaBlackGreen20),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                    RotatedBox(
                       quarterTurns: 2,
-                      child: Row(
-                        children: [
-                          Image.asset(iconKoin),
-                          Text("${state.koin}", style: jomhuriaBlackGreen20),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(),
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: Text('Yaya Bobong', style: jomhuriaBlackGreen20),
-                ),
-                Visibility(
-                  visible: isSkip2Choosen,
-                  child: RotatedBox(
-                    quarterTurns: 2,
-                    child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            isSkip2Choosen = true;
-                            isRabbit2Choosen = false;
-                            isMonkey2Choosen = false;
-                            isRhino2Choosen = false;
-                          });
-                          logicGamePlay(2, 0, "", true);
-                        },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          decoration: !isSkip2Choosen
-                              ? BoxDecoration(
+                          height: screenWidth / 1.8,
+                          width: screenWidth / 1.2,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 2, color: const Color(0xFF7D4E23))),
+                          child: Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: lightGreen,
+                                border: Border.all(
+                                  color: yellow, // Warna kuning
+                                  width: 10, // Ketebalan border
+                                ),
+                                borderRadius:
+                                    BorderRadius.circular(18), // Radius 18
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    Visibility(
+                                      visible: isRabbit2Choosen,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (koinPlayer2 > 29) {
+                                            setState(() {
+                                              isSkip2Choosen = false;
+                                              isMonkey2Choosen = false;
+                                              isRhino2Choosen = false;
+                                            });
+                                            logicGamePlay(
+                                                2, 30, "kelinci", false);
+                                          }
+                                        },
+                                        child: const HargaHewan(
+                                          namaGambar: "kelinci",
+                                          harga: 30,
+                                          player: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Visibility(
+                                      visible: isMonkey2Choosen,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (koinPlayer2 > 54) {
+                                            setState(() {
+                                              isSkip2Choosen = false;
+                                              isRabbit2Choosen = false;
+                                              isRhino2Choosen = false;
+                                            });
+                                            logicGamePlay(
+                                                2, 55, "monyet", false);
+                                          }
+                                        },
+                                        child: const HargaHewan(
+                                          namaGambar: "monyet",
+                                          harga: 55,
+                                          player: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Visibility(
+                                      visible: isRhino2Choosen,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (koinPlayer2 > 94) {
+                                            setState(() {
+                                              isSkip2Choosen = false;
+                                              isRabbit2Choosen = false;
+                                              isMonkey2Choosen = false;
+                                            });
+                                            logicGamePlay(
+                                                2, 95, "badak", false);
+                                          }
+                                        },
+                                        child: const HargaHewan(
+                                          namaGambar: "badak",
+                                          harga: 95,
+                                          player: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    //player 1
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        height: screenWidth / 1.8,
+                        width: screenWidth / 1.2,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 2, color: const Color(0xFF7D4E23))),
+                        child: Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: lightGreen,
+                              border: Border.all(
+                                color: yellow, // Warna kuning
+                                width: 10, // Ketebalan border
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(18), // Radius 18
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Visibility(
+                                    visible: isRabbit1Choosen,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (koinPlayer1 > 29) {
+                                          setState(() {
+                                            isMonkey1Choosen = false;
+                                            isElephant1Choosen = false;
+                                            isSkip1Choosen = false;
+                                          });
+                                          logicGamePlay(
+                                              1, 30, "kelinci", false);
+                                        }
+                                      },
+                                      child: const HargaHewan(
+                                        namaGambar: "kelinci",
+                                        harga: 30,
+                                        player: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Visibility(
+                                    visible: isMonkey1Choosen,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (koinPlayer1 > 54) {
+                                          setState(() {
+                                            isRabbit1Choosen = false;
+                                            isElephant1Choosen = false;
+                                            isSkip1Choosen = false;
+                                          });
+                                          logicGamePlay(1, 55, "monyet", false);
+                                        }
+                                      },
+                                      child: const HargaHewan(
+                                        namaGambar: "monyet",
+                                        harga: 55,
+                                        player: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Visibility(
+                                    visible: isElephant1Choosen,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (koinPlayer1 > 94) {
+                                          setState(() {
+                                            isRabbit1Choosen = false;
+                                            isMonkey1Choosen = false;
+                                            isSkip1Choosen = false;
+                                          });
+                                          logicGamePlay(1, 95, "gajah", false);
+                                        }
+                                      },
+                                      child: const HargaHewan(
+                                        namaGambar: "gajah",
+                                        harga: 95,
+                                        player: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Visibility(
+                          visible: isSkip1Choosen,
+                          child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isRabbit1Choosen = false;
+                                  isMonkey1Choosen = false;
+                                  isElephant1Choosen = false;
+                                });
+                                logicGamePlay(1, 0, "", true);
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
                                   color: Colors.yellow,
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
@@ -132,237 +367,372 @@ class _BuyAnimalState extends State<BuyAnimal> {
                                       blurRadius: 4,
                                     ),
                                   ],
-                                )
-                              : null,
-                          child: Text('Skip', style: jomhuriaBlackGreen20),
-                        )),
-                  ),
-                ),
-              ],
-            ),
-            RotatedBox(
-              quarterTurns: 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  height: screenWidth / 1.8,
-                  width: screenWidth / 1.2,
-                  decoration: BoxDecoration(
-                      border:
-                          Border.all(width: 2, color: const Color(0xFF7D4E23))),
-                  child: Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: lightGreen,
-                        border: Border.all(
-                          color: yellow, // Warna kuning
-                          width: 10, // Ketebalan border
+                                ),
+                                child:
+                                    Text('Skip', style: jomhuriaBlackGreen20),
+                              )),
                         ),
-                        borderRadius: BorderRadius.circular(18), // Radius 18
-                      ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isSkip2Choosen = false;
-                                  isRabbit2Choosen = true;
-                                  isMonkey2Choosen = false;
-                                  isRhino2Choosen = false;
-                                });
-                                logicGamePlay(2, 30, "kelinci", false);
-                              },
-                              child: HargaHewan(
-                                namaGambar: "kelinci",
-                                harga: 30,
-                                player: 2,
-                                isChoosen: isRabbit2Choosen,
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isSkip2Choosen = false;
-                                  isRabbit2Choosen = false;
-                                  isMonkey2Choosen = true;
-                                  isRhino2Choosen = false;
-                                });
-                                logicGamePlay(2, 55, "monyet", false);
-                              },
-                              child: HargaHewan(
-                                namaGambar: "monyet",
-                                harga: 55,
-                                player: 2,
-                                isChoosen: isMonkey2Choosen,
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isSkip2Choosen = false;
-                                  isRabbit2Choosen = false;
-                                  isMonkey2Choosen = false;
-                                  isRhino2Choosen = true;
-                                });
-                                logicGamePlay(2, 95, "badak", false);
-                              },
-                              child: HargaHewan(
-                                namaGambar: "badak",
-                                harga: 95,
-                                player: 2,
-                                isChoosen: isRhino2Choosen,
-                              ),
-                            ),
-                          ],
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            return Text(state.nama,
+                                style: jomhuriaBlackGreen20);
+                          },
                         ),
-                      )),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-            //player 2
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                height: screenWidth / 1.8,
-                width: screenWidth / 1.2,
-                decoration: BoxDecoration(
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF7D4E23))),
-                child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: lightGreen,
-                      border: Border.all(
-                        color: yellow, // Warna kuning
-                        width: 10, // Ketebalan border
-                      ),
-                      borderRadius: BorderRadius.circular(18), // Radius 18
+                      ],
                     ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isRabbit1Choosen = true;
-                                isMonkey1Choosen = false;
-                                isElephant1Choosen = false;
-                                isSkip1Choosen = false;
-                              });
-                              logicGamePlay(1, 30, "kelinci", false);
-                            },
-                            child: HargaHewan(
-                              namaGambar: "kelinci",
-                              harga: 30,
-                              player: 1,
-                              isChoosen: isRabbit1Choosen,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isRabbit1Choosen = false;
-                                isMonkey1Choosen = true;
-                                isElephant1Choosen = false;
-                                isSkip1Choosen = false;
-                              });
-                              logicGamePlay(1, 30, "monyet", false);
-                            },
-                            child: HargaHewan(
-                              namaGambar: "monyet",
-                              harga: 55,
-                              player: 1,
-                              isChoosen: isMonkey1Choosen,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isRabbit1Choosen = false;
-                                isMonkey1Choosen = false;
-                                isElephant1Choosen = true;
-                                isSkip1Choosen = false;
-                              });
-                              logicGamePlay(1, 95, "gajah", false);
-                            },
-                            child: HargaHewan(
-                              namaGambar: "gajah",
-                              harga: 95,
-                              player: 1,
-                              isChoosen: isElephant1Choosen,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            return Row(
+                              children: [
+                                Image.asset(iconKoin),
+                                Text("${state.koin}",
+                                    style: jomhuriaBlackGreen20),
+                              ],
+                            );
+                          },
+                        ),
+                        Image.asset(iconHapus),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
+            )
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(),
-                Visibility(
-                  visible: isSkip1Choosen,
-                  child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          isRabbit1Choosen = false;
-                          isMonkey1Choosen = false;
-                          isElephant1Choosen = false;
-                          isSkip1Choosen = true;
-                        });
-                        logicGamePlay(1, 0, "", true);
-                      },
+          //ukuran hp diatas 750
+          : Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(imgBackgroundGameplay),
+                      fit: BoxFit.cover),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //player 1
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: Image.asset(iconHapus),
+                        ),
+                        BlocBuilder<Player_2Cubit, Player_2State>(
+                          builder: (context, state) {
+                            return RotatedBox(
+                              quarterTurns: 2,
+                              child: Row(
+                                children: [
+                                  Image.asset(iconKoin),
+                                  Text("${state.koin}",
+                                      style: jomhuriaBlackGreen20),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: BlocBuilder<Player_2Cubit, Player_2State>(
+                            builder: (context, state) {
+                              return Text(state.nama,
+                                  style: jomhuriaBlackGreen20);
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: isSkip2Choosen,
+                          child: RotatedBox(
+                            quarterTurns: 2,
+                            child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isRabbit2Choosen = false;
+                                    isMonkey2Choosen = false;
+                                    isRhino2Choosen = false;
+                                  });
+                                  logicGamePlay(2, 0, "", true);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        offset: const Offset(0, 4),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
+                                  ),
+                                  child:
+                                      Text('Skip', style: jomhuriaBlackGreen20),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                    RotatedBox(
+                      quarterTurns: 2,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          height: screenWidth / 1.8,
+                          width: screenWidth / 1.2,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 2, color: const Color(0xFF7D4E23))),
+                          child: Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: lightGreen,
+                                border: Border.all(
+                                  color: yellow, // Warna kuning
+                                  width: 10, // Ketebalan border
+                                ),
+                                borderRadius:
+                                    BorderRadius.circular(18), // Radius 18
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    Visibility(
+                                      visible: isRabbit2Choosen,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (koinPlayer2 > 29) {
+                                            setState(() {
+                                              isSkip2Choosen = false;
+                                              isMonkey2Choosen = false;
+                                              isRhino2Choosen = false;
+                                            });
+                                            logicGamePlay(
+                                                2, 30, "kelinci", false);
+                                          }
+                                        },
+                                        child: const HargaHewan(
+                                          namaGambar: "kelinci",
+                                          harga: 30,
+                                          player: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Visibility(
+                                      visible: isMonkey2Choosen,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (koinPlayer2 > 54) {
+                                            setState(() {
+                                              isSkip2Choosen = false;
+                                              isRabbit2Choosen = false;
+                                              isRhino2Choosen = false;
+                                            });
+                                            logicGamePlay(
+                                                2, 55, "monyet", false);
+                                          }
+                                        },
+                                        child: const HargaHewan(
+                                          namaGambar: "monyet",
+                                          harga: 55,
+                                          player: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Visibility(
+                                      visible: isRhino2Choosen,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (koinPlayer2 > 94) {
+                                            setState(() {
+                                              isSkip2Choosen = false;
+                                              isRabbit2Choosen = false;
+                                              isMonkey2Choosen = false;
+                                            });
+                                            logicGamePlay(
+                                                2, 95, "badak", false);
+                                          }
+                                        },
+                                        child: const HargaHewan(
+                                          namaGambar: "badak",
+                                          harga: 95,
+                                          player: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    //player 1
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: !isSkip1Choosen
-                            ? BoxDecoration(
-                                color: Colors.yellow,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    offset: const Offset(0, 4),
-                                    blurRadius: 4,
+                        height: screenWidth / 1.8,
+                        width: screenWidth / 1.2,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 2, color: const Color(0xFF7D4E23))),
+                        child: Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: lightGreen,
+                              border: Border.all(
+                                color: yellow, // Warna kuning
+                                width: 10, // Ketebalan border
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(18), // Radius 18
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Visibility(
+                                    visible: isRabbit1Choosen,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (koinPlayer1 > 29) {
+                                          setState(() {
+                                            isMonkey1Choosen = false;
+                                            isElephant1Choosen = false;
+                                            isSkip1Choosen = false;
+                                          });
+                                          logicGamePlay(
+                                              1, 30, "kelinci", false);
+                                        }
+                                      },
+                                      child: const HargaHewan(
+                                        namaGambar: "kelinci",
+                                        harga: 30,
+                                        player: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Visibility(
+                                    visible: isMonkey1Choosen,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (koinPlayer1 > 54) {
+                                          setState(() {
+                                            isRabbit1Choosen = false;
+                                            isElephant1Choosen = false;
+                                            isSkip1Choosen = false;
+                                          });
+                                          logicGamePlay(1, 55, "monyet", false);
+                                        }
+                                      },
+                                      child: const HargaHewan(
+                                        namaGambar: "monyet",
+                                        harga: 55,
+                                        player: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Visibility(
+                                    visible: isElephant1Choosen,
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (koinPlayer1 > 94) {
+                                          setState(() {
+                                            isRabbit1Choosen = false;
+                                            isMonkey1Choosen = false;
+                                            isSkip1Choosen = false;
+                                          });
+                                          logicGamePlay(1, 95, "gajah", false);
+                                        }
+                                      },
+                                      child: const HargaHewan(
+                                        namaGambar: "gajah",
+                                        harga: 95,
+                                        player: 1,
+                                      ),
+                                    ),
                                   ),
                                 ],
-                              )
-                            : null,
-                        child: Text('Skip', style: jomhuriaBlackGreen20),
-                      )),
-                ),
-                Text('Yaya Bobong', style: jomhuriaBlackGreen20),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                BlocBuilder<Player_1Cubit, Player_1State>(
-                  builder: (context, state) {
-                    return Row(
+                              ),
+                            )),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Image.asset(iconKoin),
-                        Text("${state.koin}", style: jomhuriaBlackGreen20),
+                        Visibility(
+                          visible: isSkip1Choosen,
+                          child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isRabbit1Choosen = false;
+                                  isMonkey1Choosen = false;
+                                  isElephant1Choosen = false;
+                                });
+                                logicGamePlay(1, 0, "", true);
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.4),
+                                      offset: const Offset(0, 4),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child:
+                                    Text('Skip', style: jomhuriaBlackGreen20),
+                              )),
+                        ),
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            return Text(state.nama,
+                                style: jomhuriaBlackGreen20);
+                          },
+                        ),
                       ],
-                    );
-                  },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            return Row(
+                              children: [
+                                Image.asset(iconKoin),
+                                Text("${state.koin}",
+                                    style: jomhuriaBlackGreen20),
+                              ],
+                            );
+                          },
+                        ),
+                        Image.asset(iconHapus),
+                      ],
+                    ),
+                  ],
                 ),
-                Image.asset(iconHapus),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ));
+              ),
+    );
   }
 }

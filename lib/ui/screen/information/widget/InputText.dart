@@ -2,30 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class InputText extends StatefulWidget {
-  final String initialText;
+  final String hintText;
   final Color backgroundColor;
   final double width;
   final double height;
+  final ValueChanged<String>? onChanged;
 
-  const InputText(
-      {Key? key,
-      required this.initialText,
-      required this.backgroundColor,
-      required this.width,
-      required this.height})
-      : super(key: key);
+  const InputText({
+    Key? key,
+    required this.hintText,
+    required this.backgroundColor,
+    required this.width,
+    required this.height,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   State<InputText> createState() => _InputTextState();
 }
 
 class _InputTextState extends State<InputText> {
-  late TextEditingController _controller;
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
   }
 
   @override
@@ -50,20 +51,21 @@ class _InputTextState extends State<InputText> {
           style: inputJua,
           decoration: InputDecoration(
             border: InputBorder.none,
-            prefixIcon: Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
               child: Icon(
                 Icons.person,
                 color: Colors.white,
                 size: 25.0,
               ),
             ),
-            hintText: widget.initialText,
+            hintText: widget.hintText,
             hintStyle: inputJua,
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 6),
+            contentPadding: const EdgeInsets.symmetric(vertical: 6),
             alignLabelWithHint: true,
           ),
+          onChanged: widget.onChanged,
         ),
       ),
     );

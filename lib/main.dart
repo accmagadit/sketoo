@@ -51,6 +51,22 @@ void main() {
         create: (context) => Player_2Cubit(),
         child: const Result(),
       ),
+      BlocProvider(
+        create: (context) => Player_1Cubit(),
+        child: const ShareScreen(),
+      ),
+      BlocProvider(
+        create: (context) => Player_2Cubit(),
+        child: const ShareScreen(),
+      ),
+      BlocProvider(
+        create: (context) => Player_1Cubit(),
+        child: const Conclusion(),
+      ),
+      BlocProvider(
+        create: (context) => Player_2Cubit(),
+        child: const Conclusion(),
+      ),
     ],
     child: const MyApp(),
   ));

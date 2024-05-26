@@ -19,6 +19,103 @@ class Result extends StatefulWidget {
 }
 
 class _ResultState extends State<Result> {
+  bool isBadakMenang = false;
+  bool isGajahMenang = false;
+
+  void isWinner() {
+    Map<String, int> hewanPoin1 = {
+      "kelinci": 30,
+      "monyet": 55,
+      "gajah": 95,
+    };
+    Map<String, int> hewanPoin2 = {
+      "kelinci": 30,
+      "monyet": 55,
+      "badak": 95,
+    };
+    List<String> pasukanPlayer1 =
+        context.read<Player_1Cubit>().state.pasukanHewan;
+    List<String> pasukanPlayer2 =
+        context.read<Player_2Cubit>().state.pasukanHewan;
+    int totalPoin1 = 0;
+    int totalPoin2 = 0;
+    for (String hewan in pasukanPlayer1) {
+      totalPoin1 += hewanPoin1[hewan]!;
+    }
+    for (String hewan in pasukanPlayer2) {
+      totalPoin2 += hewanPoin2[hewan]!;
+    }
+
+    if (totalPoin1 > totalPoin2) {
+      setState(() {
+        isGajahMenang = true;
+        isBadakMenang = false;
+      });
+    } else if (totalPoin1 < totalPoin2) {
+      setState(() {
+        isGajahMenang = false;
+        isBadakMenang = true;
+      });
+    } else {
+      setState(() {
+        isBadakMenang = false;
+        isBadakMenang = false;
+      });
+    }
+  }
+
+  List<Widget> hasilTarikan() {
+    Map<String, int> hewanPoin = {
+      "kelinci": 30,
+      "monyet": 55,
+      "gajah": 95,
+    };
+    List<String> pasukanPlayer1 =
+        context.read<Player_1Cubit>().state.pasukanHewan;
+    List<String> pasukanPlayer2 =
+        context.read<Player_2Cubit>().state.pasukanHewan;
+    int totalPoin1 = 0;
+    int totalPoin2 = 0;
+    for (String hewan in pasukanPlayer1) {
+      totalPoin1 += hewanPoin[hewan]!;
+    }
+    for (String hewan in pasukanPlayer2) {
+      totalPoin2 += hewanPoin[hewan]!;
+    }
+
+    if (totalPoin1 > totalPoin2) {
+      return [
+        const SizedBox(),
+        Image.asset(
+          imgTali,
+          width: 200,
+        ),
+      ];
+    } else if (totalPoin1 < totalPoin2) {
+      return [
+        Image.asset(
+          imgTali,
+          width: 200,
+        ),
+        const SizedBox(),
+      ];
+    } else {
+      return [
+        Image.asset(
+          imgTali,
+          width: 300,
+        ),
+      ];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isWinner();
+    hasilTarikan();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +128,7 @@ class _ResultState extends State<Result> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          //player 1
+          //player 2
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -58,8 +155,8 @@ class _ResultState extends State<Result> {
 
           RotatedBox(
             quarterTurns: 2,
-            child: const PopUpPemenang(
-                    namaGambar: "badak_result.png", isPemenang: true)
+            child: PopUpPemenang(
+                    namaGambar: "badak_result.png", isPemenang: isBadakMenang)
                 .animate()
                 .scale(duration: 1000.ms, curve: Curves.bounceOut),
           ),
@@ -70,14 +167,10 @@ class _ResultState extends State<Result> {
             alignment: Alignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(),
-                  Image.asset(
-                    imgTali,
-                    width: 200,
-                  ),
-                ],
+                mainAxisAlignment: !isBadakMenang && !isGajahMenang
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.spaceBetween,
+                children: hasilTarikan(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,8 +180,11 @@ class _ResultState extends State<Result> {
                       return Row(
                         children: [
                           for (var hewan in state.pasukanHewan)
-                            Image.asset("assets/gameplay/$hewan.png",
-                                height: 30),
+                            RotatedBox(
+                              quarterTurns: 2,
+                              child: Image.asset("assets/gameplay/$hewan.png",
+                                  height: 30),
+                            ),
                         ],
                       );
                     },
@@ -108,8 +204,6 @@ class _ResultState extends State<Result> {
               ),
               InkWell(
                 onTap: () {
-                  context.read<Player_1Cubit>().reset();
-                  context.read<Player_2Cubit>().reset();
                   Navigator.pushNamed(context, ShareScreen.routename);
                 },
                 child: Container(
@@ -146,8 +240,9 @@ class _ResultState extends State<Result> {
           ),
 
           const SizedBox(height: 10),
-          //player 2
-          const PopUpPemenang(namaGambar: "gajah_result.png", isPemenang: false)
+          //player 1
+          PopUpPemenang(
+                  namaGambar: "gajah_result.png", isPemenang: isGajahMenang)
               .animate()
               .scale(duration: 1000.ms, curve: Curves.bounceOut),
 

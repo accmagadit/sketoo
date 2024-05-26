@@ -1,10 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/buy_animal.dart';
@@ -24,7 +29,7 @@ class DrawingApp extends StatefulWidget {
 }
 
 class _DrawingAppState extends State<DrawingApp> {
-  int time = 10;
+  int time = 60;
   double similarity1 = 0.0;
   double similarity2 = 0.0;
   late Timer _timer;
@@ -53,6 +58,8 @@ class _DrawingAppState extends State<DrawingApp> {
     countingTimer();
     context.read<Player_1Cubit>().changeFalseClick();
     context.read<Player_2Cubit>().changeFalseClick();
+    print(context.read<Player_1Cubit>().state.pathImages);
+    print(context.read<Player_2Cubit>().state.pathImages);
   }
 
   @override
@@ -70,8 +77,13 @@ class _DrawingAppState extends State<DrawingApp> {
         });
       } else {
         _timer.cancel();
-        context.read<Player_1Cubit>().addKoinValue(50);
-        context.read<Player_2Cubit>().addKoinValue(50);
+        //tambah koin
+        context.read<Player_1Cubit>().addKoinValue((similarity1 * 100).floor());
+        context.read<Player_2Cubit>().addKoinValue((similarity2 * 100).floor());
+
+        //simpan path
+        _saveSignaturesToCache();
+
         Navigator.pushNamed(context, BuyAnimal.routename);
       }
     });
@@ -148,226 +160,500 @@ class _DrawingAppState extends State<DrawingApp> {
     }
   }
 
+  Future<void> _saveSignaturesToCache() async {
+    try {
+      Directory cacheDir = await getTemporaryDirectory();
+      String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      String path1 = '${cacheDir.path}/signature1_$timestamp.png';
+      String path2 = '${cacheDir.path}/signature2_$timestamp.png';
+      context.read<Player_1Cubit>().addPathImages(path1);
+      context.read<Player_2Cubit>().addPathImages(path2);
+      Uint8List pngBytes1 = await signatureToPngImage(signatureGlobalKey1);
+      Uint8List pngBytes2 = await signatureToPngImage(signatureGlobalKey2);
+      File file1 = File(path1);
+      File file2 = File(path2);
+      await file1.writeAsBytes(pngBytes1);
+      await file2.writeAsBytes(pngBytes2);
+    } catch (e) {
+      debugPrint("gagal nyimpan gambar di cache $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage(imgBackgroundGameplay), fit: BoxFit.cover),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //player 1
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: InkWell(
-                      onTap: () {
-                        cleanCanvas(signatureGlobalKey2);
-                      },
-                      child: Image.asset(iconHapus)),
+      body: screenHeight < 750
+          ? SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(imgBackgroundGameplay),
+                      fit: BoxFit.cover),
                 ),
-                BlocBuilder<Player_2Cubit, Player_2State>(
-                  builder: (context, state) {
-                    return RotatedBox(
-                      quarterTurns: 2,
-                      child: Row(
-                        children: [
-                          Image.asset(iconKoin),
-                          Text("${state.koin}", style: jomhuriaBlackGreen20),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: Text('${(similarity2 * 100).toStringAsFixed(2)}%',
-                      style: jomhuriaBlackGreen20),
-                ),
-                RotatedBox(
-                  quarterTurns: 2,
-                  child: Text('Yaya Bobong', style: jomhuriaBlackGreen20),
-                ),
-              ],
-            ),
-            RotatedBox(
-              quarterTurns: 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  height: screenWidth / 1.8,
-                  width: screenWidth / 1.4,
-                  decoration: BoxDecoration(
-                      border:
-                          Border.all(width: 2, color: const Color(0xFF7D4E23))),
-                  child: SfSignaturePad(
-                    key: signatureGlobalKey2,
-                    minimumStrokeWidth: 3,
-                    maximumStrokeWidth: 3,
-                    strokeColor: Colors.black,
-                    backgroundColor: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-            //time widget
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(),
-                    Image.asset(imgTali),
-                    const SizedBox(),
-                  ],
-                )
-                    .animate(
-                      onPlay: (controller) => controller.repeat(reverse: true),
-                    )
-                    .moveX(
-                      duration: 1000.ms,
-                      begin: -10,
-                      end: 10,
+                    //player 1
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: InkWell(
+                              onTap: () {
+                                cleanCanvas(signatureGlobalKey2);
+                              },
+                              child: Image.asset(iconHapus)),
+                        ),
+                        BlocBuilder<Player_2Cubit, Player_2State>(
+                          builder: (context, state) {
+                            return RotatedBox(
+                              quarterTurns: 2,
+                              child: Row(
+                                children: [
+                                  Image.asset(iconKoin),
+                                  Text("${state.koin}",
+                                      style: jomhuriaBlackGreen20),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    BlocBuilder<Player_2Cubit, Player_2State>(
-                      builder: (context, state) {
-                        return Row(
-                          children: [
-                            for (var hewan in state.pasukanHewan)
-                              Image.asset("assets/gameplay/$hewan.png",
-                                  height: 30),
-                          ],
-                        );
-                      },
-                    )
-                        .animate(
-                          onPlay: (controller) =>
-                              controller.repeat(reverse: true),
-                        )
-                        .moveX(
-                          curve: Curves.easeIn,
-                          duration: 1000.ms,
-                          begin: -10,
-                          end: 10,
-                        ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: yellow,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.25),
-                            blurRadius: 4,
-                            offset: const Offset(0, 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: BlocBuilder<Player_2Cubit, Player_2State>(
+                            builder: (context, state) {
+                              return Text(state.nama,
+                                  style: jomhuriaBlackGreen20);
+                            },
                           ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$time',
-                          style: poppinsWhite20, // Teks putih
+                        ),
+                        RotatedBox(
+                          quarterTurns: 2,
+                          child: Text(
+                              '${(similarity2 * 100).toStringAsFixed(2)}%',
+                              style: jomhuriaBlackGreen20),
+                        ),
+                      ],
+                    ),
+                    RotatedBox(
+                      quarterTurns: 2,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          height: screenWidth / 1.8,
+                          width: screenWidth / 1.4,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 2, color: const Color(0xFF7D4E23))),
+                          child: SfSignaturePad(
+                            key: signatureGlobalKey2,
+                            minimumStrokeWidth: 3,
+                            maximumStrokeWidth: 3,
+                            strokeColor: Colors.black,
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                       ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    //time widget
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(),
+                            Image.asset(imgTali),
+                            const SizedBox(),
+                          ],
+                        )
+                            .animate(
+                              onPlay: (controller) =>
+                                  controller.repeat(reverse: true),
+                            )
+                            .moveX(
+                              duration: 1000.ms,
+                              begin: -10,
+                              end: 10,
+                            ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            BlocBuilder<Player_2Cubit, Player_2State>(
+                              builder: (context, state) {
+                                return Row(
+                                  children: [
+                                    for (var hewan in state.pasukanHewan)
+                                      RotatedBox(
+                                        quarterTurns: 2,
+                                        child: Image.asset(
+                                            "assets/gameplay/$hewan.png",
+                                            height: 30),
+                                      ),
+                                  ],
+                                );
+                              },
+                            )
+                                .animate(
+                                  onPlay: (controller) =>
+                                      controller.repeat(reverse: true),
+                                )
+                                .moveX(
+                                  curve: Curves.easeIn,
+                                  duration: 1000.ms,
+                                  begin: -10,
+                                  end: 10,
+                                ),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: yellow,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$time',
+                                  style: poppinsWhite20, // Teks putih
+                                ),
+                              ),
+                            ),
+                            BlocBuilder<Player_1Cubit, Player_1State>(
+                              builder: (context, state) {
+                                return Row(
+                                  children: [
+                                    for (var hewan in state.pasukanHewan)
+                                      Image.asset("assets/gameplay/$hewan.png",
+                                          height: 30),
+                                  ],
+                                );
+                              },
+                            )
+                                .animate(
+                                  onPlay: (controller) =>
+                                      controller.repeat(reverse: true),
+                                )
+                                .moveX(
+                                  curve: Curves.easeIn,
+                                  duration: 1000.ms,
+                                  begin: -10,
+                                  end: 10,
+                                ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+                    //player 2
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        height: screenWidth / 1.8,
+                        width: screenWidth / 1.4,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 2, color: const Color(0xFF7D4E23))),
+                        child: SfSignaturePad(
+                          key: signatureGlobalKey1,
+                          minimumStrokeWidth: 3,
+                          maximumStrokeWidth: 3,
+                          strokeColor: Colors.black,
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text('${(similarity1 * 100).toStringAsFixed(2)}%',
+                            style: jomhuriaBlackGreen20),
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            return Text(state.nama,
+                                style: jomhuriaBlackGreen20);
+                          },
+                        ),
+                      ],
                     ),
                     BlocBuilder<Player_1Cubit, Player_1State>(
                       builder: (context, state) {
                         return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            for (var hewan in state.pasukanHewan)
-                              Image.asset("assets/gameplay/$hewan.png",
-                                  height: 30),
+                            Row(
+                              children: [
+                                Image.asset(iconKoin),
+                                Text('${state.koin}',
+                                    style: jomhuriaBlackGreen20),
+                              ],
+                            ),
+                            InkWell(
+                                onTap: () {
+                                  cleanCanvas(signatureGlobalKey1);
+                                },
+                                child: Image.asset(iconHapus)),
                           ],
                         );
                       },
-                    )
-                        .animate(
-                          onPlay: (controller) =>
-                              controller.repeat(reverse: true),
-                        )
-                        .moveX(
-                          curve: Curves.easeIn,
-                          duration: 1000.ms,
-                          begin: -10,
-                          end: 10,
-                        ),
+                    ),
                   ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-            //player 2
-            ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                height: screenWidth / 1.8,
-                width: screenWidth / 1.4,
-                decoration: BoxDecoration(
-                    border:
-                        Border.all(width: 2, color: const Color(0xFF7D4E23))),
-                child: SfSignaturePad(
-                  key: signatureGlobalKey1,
-                  minimumStrokeWidth: 3,
-                  maximumStrokeWidth: 3,
-                  strokeColor: Colors.black,
-                  backgroundColor: Colors.white,
                 ),
               ),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('${(similarity1 * 100).toStringAsFixed(2)}%',
-                    style: jomhuriaBlackGreen20),
-                Text('Yaya Bobong', style: jomhuriaBlackGreen20),
-              ],
-            ),
-            BlocBuilder<Player_1Cubit, Player_1State>(
-              builder: (context, state) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(iconKoin),
-                        Text('${state.koin}', style: jomhuriaBlackGreen20),
-                      ],
-                    ),
-                    InkWell(
-                        onTap: () {
-                          cleanCanvas(signatureGlobalKey1);
+            )
+          //ukuran layar besar 750
+          : Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(imgBackgroundGameplay),
+                    fit: BoxFit.cover),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //player 1
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RotatedBox(
+                        quarterTurns: 2,
+                        child: InkWell(
+                            onTap: () {
+                              cleanCanvas(signatureGlobalKey2);
+                            },
+                            child: Image.asset(iconHapus)),
+                      ),
+                      BlocBuilder<Player_2Cubit, Player_2State>(
+                        builder: (context, state) {
+                          return RotatedBox(
+                            quarterTurns: 2,
+                            child: Row(
+                              children: [
+                                Image.asset(iconKoin),
+                                Text("${state.koin}",
+                                    style: jomhuriaBlackGreen20),
+                              ],
+                            ),
+                          );
                         },
-                        child: Image.asset(iconHapus)),
-                  ],
-                );
-              },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      RotatedBox(
+                        quarterTurns: 2,
+                        child: BlocBuilder<Player_2Cubit, Player_2State>(
+                          builder: (context, state) {
+                            return Text(state.nama,
+                                style: jomhuriaBlackGreen20);
+                          },
+                        ),
+                      ),
+                      RotatedBox(
+                        quarterTurns: 2,
+                        child: Text(
+                            '${(similarity2 * 100).toStringAsFixed(2)}%',
+                            style: jomhuriaBlackGreen20),
+                      ),
+                    ],
+                  ),
+                  RotatedBox(
+                    quarterTurns: 2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        height: screenWidth / 1.8,
+                        width: screenWidth / 1.4,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 2, color: const Color(0xFF7D4E23))),
+                        child: SfSignaturePad(
+                          key: signatureGlobalKey2,
+                          minimumStrokeWidth: 3,
+                          maximumStrokeWidth: 3,
+                          strokeColor: Colors.black,
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+                  //time widget
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(),
+                          Image.asset(imgTali),
+                          const SizedBox(),
+                        ],
+                      )
+                          .animate(
+                            onPlay: (controller) =>
+                                controller.repeat(reverse: true),
+                          )
+                          .moveX(
+                            duration: 1000.ms,
+                            begin: -10,
+                            end: 10,
+                          ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BlocBuilder<Player_2Cubit, Player_2State>(
+                            builder: (context, state) {
+                              return Row(
+                                children: [
+                                  for (var hewan in state.pasukanHewan)
+                                    RotatedBox(
+                                      quarterTurns: 2,
+                                      child: Image.asset(
+                                          "assets/gameplay/$hewan.png",
+                                          height: 30),
+                                    ),
+                                ],
+                              );
+                            },
+                          )
+                              .animate(
+                                onPlay: (controller) =>
+                                    controller.repeat(reverse: true),
+                              )
+                              .moveX(
+                                curve: Curves.easeIn,
+                                duration: 1000.ms,
+                                begin: -10,
+                                end: 10,
+                              ),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: yellow,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.25),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$time',
+                                style: poppinsWhite20, // Teks putih
+                              ),
+                            ),
+                          ),
+                          BlocBuilder<Player_1Cubit, Player_1State>(
+                            builder: (context, state) {
+                              return Row(
+                                children: [
+                                  for (var hewan in state.pasukanHewan)
+                                    Image.asset("assets/gameplay/$hewan.png",
+                                        height: 30),
+                                ],
+                              );
+                            },
+                          )
+                              .animate(
+                                onPlay: (controller) =>
+                                    controller.repeat(reverse: true),
+                              )
+                              .moveX(
+                                curve: Curves.easeIn,
+                                duration: 1000.ms,
+                                begin: -10,
+                                end: 10,
+                              ),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+                  //player 2
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      height: screenWidth / 1.8,
+                      width: screenWidth / 1.4,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2, color: const Color(0xFF7D4E23))),
+                      child: SfSignaturePad(
+                        key: signatureGlobalKey1,
+                        minimumStrokeWidth: 3,
+                        maximumStrokeWidth: 3,
+                        strokeColor: Colors.black,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text('${(similarity1 * 100).toStringAsFixed(2)}%',
+                          style: jomhuriaBlackGreen20),
+                      BlocBuilder<Player_1Cubit, Player_1State>(
+                        builder: (context, state) {
+                          return Text(state.nama, style: jomhuriaBlackGreen20);
+                        },
+                      ),
+                    ],
+                  ),
+                  BlocBuilder<Player_1Cubit, Player_1State>(
+                    builder: (context, state) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(iconKoin),
+                              Text('${state.koin}',
+                                  style: jomhuriaBlackGreen20),
+                            ],
+                          ),
+                          InkWell(
+                              onTap: () {
+                                cleanCanvas(signatureGlobalKey1);
+                              },
+                              child: Image.asset(iconHapus)),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    ));
+    );
   }
 }

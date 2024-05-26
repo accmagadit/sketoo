@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
+import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/story.dart';
 import 'package:sketoo/ui/screen/information/widget/CustomButton.dart';
 import 'package:sketoo/ui/screen/information/widget/InputText.dart';
@@ -65,17 +68,33 @@ class PopupInputPlayer extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const InputText(
-                        initialText: "Nama Player 1",
-                        backgroundColor: Color(0xFFFFD900),
-                        width: 200,
-                        height: 40),
+                    InputText(
+                      hintText: "Nama Player 1",
+                      backgroundColor: Color(0xFFFFD900),
+                      width: 200,
+                      height: 40,
+                      onChanged: (value) {
+                        if (value == "") {
+                          context.read<Player_1Cubit>().changeName("Player 1");
+                        } else {
+                          context.read<Player_1Cubit>().changeName(value);
+                        }
+                      },
+                    ),
                     const SizedBox(height: 20),
-                    const InputText(
-                        initialText: "Nama Player 2",
-                        backgroundColor: Color(0xFFFFD900),
-                        width: 200,
-                        height: 40),
+                    InputText(
+                      hintText: "Nama Player 2",
+                      backgroundColor: Color(0xFFFFD900),
+                      width: 200,
+                      height: 40,
+                      onChanged: (value) {
+                        if (value == "") {
+                          context.read<Player_2Cubit>().changeName("Player 2");
+                        } else {
+                          context.read<Player_2Cubit>().changeName(value);
+                        }
+                      },
+                    ),
                     const SizedBox(height: 30),
                     Container(
                       child: CustomButton(

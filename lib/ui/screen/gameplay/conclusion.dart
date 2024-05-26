@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
+import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/widget/scores_conclusion.dart';
 import 'package:sketoo/ui/screen/information/welcome.dart';
 import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
@@ -14,6 +20,23 @@ class Conclusion extends StatefulWidget {
 }
 
 class _ConclusionState extends State<Conclusion> {
+  Future<void> clearCache() async {
+    try {
+      Directory cacheDir = await getTemporaryDirectory();
+      List<FileSystemEntity> fileList = cacheDir.listSync();
+      for (FileSystemEntity file in fileList) {
+        if (file is File) {
+          file.deleteSync();
+        }
+      }
+      cacheDir.deleteSync(recursive: true);
+      print(fileList);
+      print('Cache cleared successfully.');
+    } catch (e) {
+      print('Error clearing cache: $e');
+    }
+  }
+
   bool hasClickPop = false;
   @override
   Widget build(BuildContext context) {
@@ -56,7 +79,10 @@ class _ConclusionState extends State<Conclusion> {
         ),
         floatingActionButton: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, HomeScreen.routename);
+              context.read<Player_1Cubit>().reset();
+              context.read<Player_2Cubit>().reset();
+              Navigator.pushReplacementNamed(context, HomeScreen.routename);
+              clearCache();
             },
             child: Image.asset(imgHomeButton)),
       ),

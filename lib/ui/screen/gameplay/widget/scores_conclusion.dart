@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
+import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
@@ -60,7 +63,7 @@ class ScoreConclusion extends StatelessWidget {
                         offset: Offset(1, 1.5))
                   ],
                 ),
-                child: Row( 
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
@@ -81,21 +84,57 @@ class ScoreConclusion extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Ying",
-                          style: poppinsBlack16,
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            return Text(
+                              state.nama,
+                              style: poppinsBlack16,
+                            );
+                          },
                         ),
-                        Text(
-                          "300",
-                          style: juaBlack15,
+                        BlocBuilder<Player_1Cubit, Player_1State>(
+                          builder: (context, state) {
+                            Map<String, int> hewanPoin = {
+                              "kelinci": 30,
+                              "monyet": 55,
+                              "gajah": 95,
+                            };
+                            List<String> pasukan = state.pasukanHewan;
+                            int totalPoin = 0;
+                            for (String hewan in pasukan) {
+                              totalPoin += hewanPoin[hewan]!;
+                            }
+                            return Text(
+                              "$totalPoin",
+                              style: juaBlack15,
+                            );
+                          },
                         ),
-                        Text(
-                          "Yaya Boboboy",
-                          style: poppinsBlack16,
+                        BlocBuilder<Player_2Cubit, Player_2State>(
+                          builder: (context, state) {
+                            return Text(
+                              state.nama,
+                              style: poppinsBlack16,
+                            );
+                          },
                         ),
-                        Text(
-                          "300",
-                          style: juaBlack15,
+                        BlocBuilder<Player_2Cubit, Player_2State>(
+                          builder: (context, state) {
+                            Map<String, int> hewanPoin = {
+                              "kelinci": 30,
+                              "monyet": 55,
+                              "badak": 95,
+                            };
+                            List<String> pasukan = state.pasukanHewan;
+                            int totalPoin = 0;
+                            for (String hewan in pasukan) {
+                              totalPoin += hewanPoin[hewan]!;
+                            }
+                            return Text(
+                              "$totalPoin",
+                              style: juaBlack15,
+                            );
+                          },
                         ),
                       ],
                     ),
