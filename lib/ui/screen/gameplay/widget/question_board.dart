@@ -40,7 +40,7 @@ class QuestionBoard extends StatelessWidget {
             ).animate().fade(duration: 1000.ms),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, route);
+                Navigator.pushReplacementNamed(context, route);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(yellow),

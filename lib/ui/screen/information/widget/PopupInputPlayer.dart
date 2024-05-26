@@ -99,7 +99,7 @@ class PopupInputPlayer extends StatelessWidget {
                     Container(
                       child: CustomButton(
                           onTap: () {
-                            Navigator.pushNamed(context, StoryScreen.routename);
+                            Navigator.pushReplacementNamed(context, StoryScreen.routename);
                           },
                           color: Color(0xFFFF6EC9),
                           text: 'Start!',
