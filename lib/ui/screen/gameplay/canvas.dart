@@ -31,7 +31,7 @@ class DrawingApp extends StatefulWidget {
 }
 
 class _DrawingAppState extends State<DrawingApp> {
-  int time = 2;
+  int time = 20;
   double similarity1 = 0.0;
   double similarity2 = 0.0;
   late Timer _timer;
@@ -69,8 +69,12 @@ class _DrawingAppState extends State<DrawingApp> {
       } else {
         _timer.cancel();
         _saveSignaturesToCache();
-        context.read<Player_1Cubit>().addKoinValue((double.parse((similarity1.toString().substring(0, 3)))*10).toInt());
-        context.read<Player_2Cubit>().addKoinValue((double.parse((similarity2.toString().substring(0, 3)))*10).toInt());
+        context.read<Player_1Cubit>().addKoinValue(
+            (double.parse((similarity1.toString().substring(0, 3))) * 10)
+                .toInt());
+        context.read<Player_2Cubit>().addKoinValue(
+            (double.parse((similarity2.toString().substring(0, 3))) * 10)
+                .toInt());
         Navigator.pushReplacementNamed(context, BuyAnimal.routename);
       }
     });
@@ -426,6 +430,7 @@ class _DrawingAppState extends State<DrawingApp> {
               )
             //ukuran layar besar 750
             : Stack(
+                alignment: Alignment.center,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(20),
@@ -629,7 +634,7 @@ class _DrawingAppState extends State<DrawingApp> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                                "${double.parse((similarity2.toString().substring(0, 3))) * 10}%",
+                                "${double.parse((similarity1.toString().substring(0, 3))) * 10}%",
                                 style: jomhuriaBlackGreen20),
                             BlocBuilder<Player_1Cubit, Player_1State>(
                               builder: (context, state) {

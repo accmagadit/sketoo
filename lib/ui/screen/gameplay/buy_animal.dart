@@ -39,6 +39,9 @@ class _BuyAnimalState extends State<BuyAnimal> {
     bool player2Click = context.read<Player_2Cubit>().state.hasClick;
     int playerBabak = context.read<Player_1Cubit>().state.babak;
 
+    debugPrint(
+        "Player: $player, Player Babak: $playerBabak, Player1Click: $player1Click, Player2Click: $player2Click");
+
     if (player == 1 && player1Click == false) {
       context.read<Player_1Cubit>().subtractionKoin(hargaHewan);
       context.read<Player_1Cubit>().changeTrueClick();
@@ -53,13 +56,15 @@ class _BuyAnimalState extends State<BuyAnimal> {
       }
     }
 
-    debugPrint("$playerBabak");
-
     if (player1Click || player2Click) {
-      if (playerBabak < 4) {
-        Navigator.pushReplacementNamed(context, StoryScreen.routename);
-      } else if (playerBabak == 4) {
-        Navigator.pushReplacementNamed(context, Result.routename);
+      try {
+        if (playerBabak < 4) {
+          Navigator.pushReplacementNamed(context, StoryScreen.routename);
+        } else {
+          Navigator.pushReplacementNamed(context, Result.routename);
+        }
+      } catch (e) {
+        throw ("error le $e");
       }
     }
   }

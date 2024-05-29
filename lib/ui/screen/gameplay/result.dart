@@ -67,10 +67,15 @@ class _ResultState extends State<Result> {
   }
 
   List<Widget> hasilTarikan() {
-    Map<String, int> hewanPoin = {
+    Map<String, int> hewanPoin1 = {
       "kelinci": 30,
       "monyet": 55,
       "gajah": 95,
+    };
+    Map<String, int> hewanPoin2 = {
+      "kelinci": 30,
+      "monyet": 55,
+      "badak": 95,
     };
     List<String> pasukanPlayer1 =
         context.read<Player_1Cubit>().state.pasukanHewan;
@@ -79,10 +84,10 @@ class _ResultState extends State<Result> {
     int totalPoin1 = 0;
     int totalPoin2 = 0;
     for (String hewan in pasukanPlayer1) {
-      totalPoin1 += hewanPoin[hewan]!;
+      totalPoin1 += hewanPoin1[hewan]!;
     }
     for (String hewan in pasukanPlayer2) {
-      totalPoin2 += hewanPoin[hewan]!;
+      totalPoin2 += hewanPoin2[hewan]!;
     }
 
     if (totalPoin1 > totalPoin2) {
