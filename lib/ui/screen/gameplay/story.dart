@@ -24,11 +24,7 @@ class _StoryScreenState extends State<StoryScreen> {
     super.initState();
     context.read<Player_1Cubit>().addBabak();
     context.read<Player_2Cubit>().addBabak();
-    debugPrint(
-        "panjang cerita fabel: ${ceritaFabel.length}");
-    debugPrint(
-        "index cerita fabel: ${context.read<Player_1Cubit>().state.babak - 1}");
-    debugPrint("index Babak: ${context.read<Player_1Cubit>().state.babak}");
+
   }
 
   @override

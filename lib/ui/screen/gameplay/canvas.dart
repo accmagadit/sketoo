@@ -69,11 +69,9 @@ class _DrawingAppState extends State<DrawingApp> {
         _timer.cancel();
         _saveSignaturesToCache();
         context.read<Player_1Cubit>().addKoinValue(
-            (double.parse((similarity1.toString().substring(0, 3))) * 10)
-                .toInt());
+            predictSafe(similarity1));
         context.read<Player_2Cubit>().addKoinValue(
-            (double.parse((similarity2.toString().substring(0, 3))) * 10)
-                .toInt());
+           predictSafe(similarity2));
         Navigator.pushReplacementNamed(context, BuyAnimal.routename);
       }
     });
@@ -142,8 +140,7 @@ class _DrawingAppState extends State<DrawingApp> {
       List resultPrediction1 = await prediction(processedImage1);
       List resultPrediction2 = await prediction(processedImage2);
       int index = jawaban.indexOf(level);
-      print(similarity1);
-      print(similarity2);
+
       setState(() {
         similarity1 = resultPrediction1[0][index];
         similarity2 = resultPrediction2[0][index];
@@ -168,7 +165,17 @@ class _DrawingAppState extends State<DrawingApp> {
       await file1.writeAsBytes(pngBytes1);
       await file2.writeAsBytes(pngBytes2);
     } catch (e) {
-      debugPrint("gagal nyimpan gambar di cache $e");
+      rethrow;
+    }
+  }
+
+  int predictSafe(double similarity) {
+    if ((double.parse((similarity.toString().substring(0, 3))) * 10).toInt() <=
+        10) {
+      return (double.parse((similarity.toString().substring(0, 3))) * 100).toInt();
+    }
+    else{
+      return (double.parse((similarity.toString().substring(0, 3))) * 10).toInt();
     }
   }
 
@@ -239,7 +246,7 @@ class _DrawingAppState extends State<DrawingApp> {
                               RotatedBox(
                                 quarterTurns: 2,
                                 child: Text(
-                                    "${double.parse((similarity2.toString().substring(0, 3))) * 10}%",
+                                    "${predictSafe(similarity2)}%",
                                     style: jomhuriaBlackGreen20),
                               ),
                             ],
@@ -390,7 +397,7 @@ class _DrawingAppState extends State<DrawingApp> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                  "${double.parse((similarity1.toString().substring(0, 3))) * 10}%",
+                                 "${predictSafe(similarity1)}%",
                                   style: jomhuriaBlackGreen20),
                               BlocBuilder<Player_1Cubit, Player_1State>(
                                 builder: (context, state) {
@@ -486,7 +493,7 @@ class _DrawingAppState extends State<DrawingApp> {
                             RotatedBox(
                               quarterTurns: 2,
                               child: Text(
-                                  "${double.parse((similarity2.toString().substring(0, 3))) * 10}%",
+                                  "${predictSafe(similarity2)}%",
                                   style: jomhuriaBlackGreen20),
                             ),
                           ],
@@ -635,7 +642,7 @@ class _DrawingAppState extends State<DrawingApp> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                                "${double.parse((similarity1.toString().substring(0, 3))) * 10}%",
+                               "${predictSafe(similarity1)}%",
                                 style: jomhuriaBlackGreen20),
                             BlocBuilder<Player_1Cubit, Player_1State>(
                               builder: (context, state) {

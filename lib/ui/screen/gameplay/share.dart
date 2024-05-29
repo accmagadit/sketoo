@@ -43,7 +43,6 @@ class _ShareScreenState extends State<ShareScreen> {
       }
       return fileCount;
     } catch (e) {
-      print('Error counting files in cache: $e');
       return -1;
     }
   }
@@ -101,8 +100,6 @@ class _ShareScreenState extends State<ShareScreen> {
         isBadakMenang = false;
       });
     }
-    debugPrint("$totalPoin1");
-    debugPrint("$totalPoin2");
   }
 
   @override

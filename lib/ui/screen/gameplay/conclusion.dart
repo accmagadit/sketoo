@@ -30,10 +30,8 @@ class _ConclusionState extends State<Conclusion> {
         }
       }
       cacheDir.deleteSync(recursive: true);
-      print(fileList);
-      print('Cache cleared successfully.');
     } catch (e) {
-      print('Error clearing cache: $e');
+      rethrow;
     }
   }
 

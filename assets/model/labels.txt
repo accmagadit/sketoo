@@ -1,4 +1,4 @@
-0 Apel
-1 Burung
-2 Lengan
-3 Semut
+0 Square
+1 Cookies
+2 Eye
+3 Circle

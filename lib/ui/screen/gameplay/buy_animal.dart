@@ -39,8 +39,7 @@ class _BuyAnimalState extends State<BuyAnimal> {
     bool player2Click = context.read<Player_2Cubit>().state.hasClick;
     int playerBabak = context.read<Player_1Cubit>().state.babak;
 
-    debugPrint(
-        "Player: $player, Player Babak: $playerBabak, Player1Click: $player1Click, Player2Click: $player2Click");
+
 
     if (player == 1 && player1Click == false) {
       context.read<Player_1Cubit>().subtractionKoin(hargaHewan);
