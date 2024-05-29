@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -143,6 +142,8 @@ class _DrawingAppState extends State<DrawingApp> {
       List resultPrediction1 = await prediction(processedImage1);
       List resultPrediction2 = await prediction(processedImage2);
       int index = jawaban.indexOf(level);
+      print(similarity1);
+      print(similarity2);
       setState(() {
         similarity1 = resultPrediction1[0][index];
         similarity2 = resultPrediction2[0][index];
