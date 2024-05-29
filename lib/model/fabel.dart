@@ -13,8 +13,8 @@ List<String> ceritaFabel = [
 ];
 List<String> pertanyaan = [
   "Beruang ingin membuat meja berbentuk apa?",
-  "Hewan apakah yang terlambat datang ke acara ulang tahun kancil?",
-  "Saat burung merasa kesal, ia merasa ingin mematuk apa?",
-  "Hewan apakah yang terganggu oleh cerita gajah dari cerita sebelumnya?"
+  "Kelinci sangat suka membuat apa?",
+  "Apa yang menjadi simbol kecantikan dan daya tarik Luna?",
+  "Kalung yang dibuat gajah berbentuk apa?"
 ];
 List<String> jawaban = ["Square", "Cookies", "Eye", "Circle"];
