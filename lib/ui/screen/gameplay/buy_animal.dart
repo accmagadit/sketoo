@@ -52,10 +52,13 @@ class _BuyAnimalState extends State<BuyAnimal> {
         context.read<Player_2Cubit>().addPasukanHewan(namaGambar);
       }
     }
+
+    debugPrint("$playerBabak");
+
     if (player1Click || player2Click) {
-      if (playerBabak != 4) {
+      if (playerBabak < 4) {
         Navigator.pushReplacementNamed(context, StoryScreen.routename);
-      } else {
+      } else if (playerBabak == 4) {
         Navigator.pushReplacementNamed(context, Result.routename);
       }
     }

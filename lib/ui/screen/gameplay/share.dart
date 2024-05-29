@@ -26,6 +26,8 @@ class _ShareScreenState extends State<ShareScreen> {
   ScreenshotController screenshotController = ScreenshotController();
   GlobalKey previewContainer = GlobalKey();
   bool hasClickPop = false;
+  bool isBadakMenang = false;
+  bool isGajahMenang = false;
 
   Future<int> countFilesInCache() async {
     try {
@@ -59,61 +61,61 @@ class _ShareScreenState extends State<ShareScreen> {
     Share.shareXFiles([XFile('$directory/screenshot.png')]);
   }
 
+  void isWinnerShare() {
+    Map<String, int> hewanPoin1 = {
+      "kelinci": 30,
+      "monyet": 55,
+      "gajah": 95,
+    };
+    Map<String, int> hewanPoin2 = {
+      "kelinci": 30,
+      "monyet": 55,
+      "badak": 95,
+    };
+    List<String> pasukanPlayer1 =
+        context.read<Player_1Cubit>().state.pasukanHewan;
+    List<String> pasukanPlayer2 =
+        context.read<Player_2Cubit>().state.pasukanHewan;
+    int totalPoin1 = 0;
+    int totalPoin2 = 0;
+    for (String hewan in pasukanPlayer1) {
+      totalPoin1 += hewanPoin1[hewan]!;
+    }
+    for (String hewan in pasukanPlayer2) {
+      totalPoin2 += hewanPoin2[hewan]!;
+    }
+
+    if (totalPoin1 > totalPoin2) {
+      setState(() {
+        isGajahMenang = true;
+        isBadakMenang = false;
+      });
+    } else if (totalPoin1 < totalPoin2) {
+      setState(() {
+        isGajahMenang = false;
+        isBadakMenang = true;
+      });
+    } else if (totalPoin1 == totalPoin2) {
+      setState(() {
+        isGajahMenang = false;
+        isBadakMenang = false;
+      });
+    }
+    debugPrint("$totalPoin1");
+    debugPrint("$totalPoin2");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isWinnerShare();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
     ScreenshotController screenshotController = ScreenshotController();
-    bool isBadakMenang = false;
-    bool isGajahMenang = false;
-
-    void isWinner() {
-      Map<String, int> hewanPoin1 = {
-        "kelinci": 30,
-        "monyet": 55,
-        "gajah": 95,
-      };
-      Map<String, int> hewanPoin2 = {
-        "kelinci": 30,
-        "monyet": 55,
-        "badak": 95,
-      };
-      List<String> pasukanPlayer1 =
-          context.read<Player_1Cubit>().state.pasukanHewan;
-      List<String> pasukanPlayer2 =
-          context.read<Player_2Cubit>().state.pasukanHewan;
-      int totalPoin1 = 0;
-      int totalPoin2 = 0;
-      for (String hewan in pasukanPlayer1) {
-        totalPoin1 += hewanPoin1[hewan]!;
-      }
-      for (String hewan in pasukanPlayer2) {
-        totalPoin2 += hewanPoin2[hewan]!;
-      }
-
-      if (totalPoin1 > totalPoin2) {
-        setState(() {
-          isGajahMenang = true;
-          isBadakMenang = false;
-        });
-      } else if (totalPoin1 < totalPoin2) {
-        setState(() {
-          isGajahMenang = false;
-          isBadakMenang = true;
-        });
-      } else {
-        setState(() {
-          isBadakMenang = false;
-          isBadakMenang = false;
-        });
-      }
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      isWinner();
-    }
 
     return RepaintBoundary(
       key: previewContainer,
@@ -162,55 +164,50 @@ class _ShareScreenState extends State<ShareScreen> {
                                                 int fileCount =
                                                     snapshot.data ?? 0;
                                                 if (fileCount > 7) {
-                                                  return SizedBox(
-                                                    height: 260,
-                                                    child: GridView.builder(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0),
-                                                      gridDelegate:
-                                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 2,
-                                                        childAspectRatio: 3 / 2,
-                                                        mainAxisSpacing: 20,
-                                                        crossAxisSpacing: 20,
-                                                      ),
-                                                      itemCount: state
-                                                          .pathImages.length,
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              int index) {
-                                                        String imagePath = state
-                                                            .pathImages[index];
-                                                        return Container(
-                                                          decoration:
-                                                              BoxDecoration(
+                                                  return GridView.builder(
+                                                    shrinkWrap: true,
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                      childAspectRatio: 3 / 2,
+                                                      mainAxisSpacing: 20,
+                                                      crossAxisSpacing: 20,
+                                                    ),
+                                                    itemCount:
+                                                        state.pathImages.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      String imagePath = state
+                                                          .pathImages[index];
+                                                      return Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(22),
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                        child: RotatedBox(
+                                                          quarterTurns: 2,
+                                                          child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         22),
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                          child: RotatedBox(
-                                                            quarterTurns: 2,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          22),
-                                                              child: Image.file(
-                                                                File(imagePath),
-                                                                height: 300,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
+                                                            child: Image.file(
+                                                              File(imagePath),
+                                                              height: 300,
+                                                              fit: BoxFit.cover,
                                                             ),
                                                           ),
-                                                        );
-                                                      },
-                                                    ),
+                                                        ),
+                                                      );
+                                                    },
                                                   );
                                                 } else {
                                                   // Jika jumlah file bukan 8, tidak menampilkan apa pun
@@ -304,51 +301,46 @@ class _ShareScreenState extends State<ShareScreen> {
                                                 int fileCount =
                                                     snapshot.data ?? 0;
                                                 if (fileCount > 7) {
-                                                  return SizedBox(
-                                                    height: 260,
-                                                    child: GridView.builder(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0),
-                                                      gridDelegate:
-                                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 2,
-                                                        childAspectRatio: 3 / 2,
-                                                        mainAxisSpacing: 20,
-                                                        crossAxisSpacing: 20,
-                                                      ),
-                                                      itemCount: state
-                                                          .pathImages.length,
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              int index) {
-                                                        String imagePath = state
-                                                            .pathImages[index];
-                                                        return Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        22),
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        22),
-                                                            child: Image.file(
-                                                              File(imagePath),
-                                                              height: 300,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
+                                                  return GridView.builder(
+                                                    shrinkWrap: true,
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                      childAspectRatio: 3 / 2,
+                                                      mainAxisSpacing: 20,
+                                                      crossAxisSpacing: 20,
                                                     ),
+                                                    itemCount:
+                                                        state.pathImages.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      String imagePath = state
+                                                          .pathImages[index];
+                                                      return Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(22),
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(22),
+                                                          child: Image.file(
+                                                            File(imagePath),
+                                                            height: 300,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   );
                                                 } else {
                                                   return const SizedBox();
@@ -418,51 +410,48 @@ class _ShareScreenState extends State<ShareScreen> {
                                               int fileCount =
                                                   snapshot.data ?? 0;
                                               if (fileCount > 7) {
-                                                return SizedBox(
-                                                  height: 220,
-                                                  child: GridView.builder(
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    gridDelegate:
-                                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 2,
-                                                      childAspectRatio: 3 / 2,
-                                                      mainAxisSpacing: 20,
-                                                      crossAxisSpacing: 20,
-                                                    ),
-                                                    itemCount:
-                                                        state.pathImages.length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      String imagePath = state
-                                                          .pathImages[index];
-                                                      return Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(22),
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(22),
-                                                          child: RotatedBox(
-                                                            quarterTurns: 2,
-                                                            child: Image.file(
-                                                              File(imagePath),
-                                                              height: 300,
-                                                              fit: BoxFit.cover,
-                                                            ),
+                                                return GridView.builder(
+                                                  shrinkWrap: true,
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 2,
+                                                    childAspectRatio: 3 / 2,
+                                                    mainAxisSpacing: 20,
+                                                    crossAxisSpacing: 20,
+                                                  ),
+                                                  itemCount:
+                                                      state.pathImages.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    String imagePath =
+                                                        state.pathImages[index];
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(22),
+                                                        border: Border.all(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(22),
+                                                        child: RotatedBox(
+                                                          quarterTurns: 2,
+                                                          child: Image.file(
+                                                            File(imagePath),
+                                                            height: 300,
+                                                            fit: BoxFit.cover,
                                                           ),
                                                         ),
-                                                      );
-                                                    },
-                                                  ),
+                                                      ),
+                                                    );
+                                                  },
                                                 );
                                               } else {
                                                 return const SizedBox();
@@ -554,48 +543,45 @@ class _ShareScreenState extends State<ShareScreen> {
                                               int fileCount =
                                                   snapshot.data ?? 0;
                                               if (fileCount > 7) {
-                                                return SizedBox(
-                                                  height: 220,
-                                                  child: GridView.builder(
-                                                    padding:
-                                                        const EdgeInsets.all(0),
-                                                    gridDelegate:
-                                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 2,
-                                                      childAspectRatio: 3 / 2,
-                                                      mainAxisSpacing: 20,
-                                                      crossAxisSpacing: 20,
-                                                    ),
-                                                    itemCount:
-                                                        state.pathImages.length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      String imagePath = state
-                                                          .pathImages[index];
-                                                      return Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(22),
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(22),
-                                                          child: Image.file(
-                                                            File(imagePath),
-                                                            height: 300,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
+                                                return GridView.builder(
+                                                  shrinkWrap: true,
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 2,
+                                                    childAspectRatio: 3 / 2,
+                                                    mainAxisSpacing: 20,
+                                                    crossAxisSpacing: 20,
                                                   ),
+                                                  itemCount:
+                                                      state.pathImages.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    String imagePath =
+                                                        state.pathImages[index];
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(22),
+                                                        border: Border.all(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(22),
+                                                        child: Image.file(
+                                                          File(imagePath),
+                                                          height: 300,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 );
                                               } else {
                                                 return const SizedBox();

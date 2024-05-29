@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
+import 'package:sketoo/model/fabel.dart';
 import 'package:sketoo/ui/screen/gameplay/canvas.dart';
 import 'package:sketoo/ui/screen/gameplay/widget/question_board.dart';
 import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
@@ -33,9 +36,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     image: AssetImage(imgBackgroundGameplay),
                     fit: BoxFit.cover),
               ),
-              child: const QuestionBoard(
+              child: QuestionBoard(
                 pertanyaan:
-                    "Hewan apakah yang terganggu oleh cerita gajah dari cerita sebelumnya?",
+                    pertanyaan[context.read<Player_1Cubit>().state.babak - 1],
                 route: DrawingApp.routename,
                 isQuestion: true,
               )),

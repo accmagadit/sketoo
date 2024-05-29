@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
+import 'package:sketoo/model/fabel.dart';
 import 'package:sketoo/ui/screen/gameplay/question.dart';
 import 'package:sketoo/ui/screen/gameplay/widget/question_board.dart';
 import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
@@ -24,11 +25,10 @@ class _StoryScreenState extends State<StoryScreen> {
     context.read<Player_1Cubit>().addBabak();
     context.read<Player_2Cubit>().addBabak();
     debugPrint(
-        "klik player 1: ${context.read<Player_1Cubit>().state.hasClick}");
+        "panjang cerita fabel: ${ceritaFabel.length}");
     debugPrint(
-        "klik player 2: ${context.read<Player_2Cubit>().state.hasClick}");
-    debugPrint("Babak p1: ${context.read<Player_1Cubit>().state.babak}");
-    debugPrint("Babak p2: ${context.read<Player_2Cubit>().state.babak}");
+        "index cerita fabel: ${context.read<Player_1Cubit>().state.babak - 1}");
+    debugPrint("index Babak: ${context.read<Player_1Cubit>().state.babak}");
   }
 
   @override
@@ -49,9 +49,9 @@ class _StoryScreenState extends State<StoryScreen> {
                     image: AssetImage(imgBackgroundGameplay),
                     fit: BoxFit.cover),
               ),
-              child: const QuestionBoard(
+              child: QuestionBoard(
                 pertanyaan:
-                    "Gajah dikenal sebagai binatang yang besar. Suatu hari, kawanan gajah yang besar datang ke hutan untuk mencari makan.\nKehadiran gajah ini mengganggu kawanan semut yang tinggal di sana. Banyak rumah semut hancur karena diinjak gajah yang mencari makan.",
+                    ceritaFabel[context.read<Player_1Cubit>().state.babak - 1],
                 route: QuestionScreen.routename,
                 isQuestion: false,
               )),

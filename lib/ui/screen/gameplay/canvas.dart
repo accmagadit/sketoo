@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -11,6 +12,7 @@ import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
+import 'package:sketoo/model/fabel.dart';
 import 'package:sketoo/ui/screen/gameplay/buy_animal.dart';
 import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
 import 'package:sketoo/utils/assets.dart';
@@ -29,27 +31,16 @@ class DrawingApp extends StatefulWidget {
 }
 
 class _DrawingAppState extends State<DrawingApp> {
-  int time = 20;
+  int time = 2;
   double similarity1 = 0.0;
   double similarity2 = 0.0;
   late Timer _timer;
   List<Widget> hewanPlayer1 = [];
   List<Widget> hewanPlayer2 = [];
-  List<String> classesModel = [
-    'ambulans',
-    'apel',
-    'burung',
-    'jam alarm',
-    'kapal',
-    'landasar',
-    'lengan',
-    'peri',
-    'pesawat',
-    'semut'
-  ];
   final GlobalKey<SfSignaturePadState> signatureGlobalKey1 = GlobalKey();
   final GlobalKey<SfSignaturePadState> signatureGlobalKey2 = GlobalKey();
   String level = '';
+
   bool hasClickPop = false;
 
   @override
@@ -77,13 +68,9 @@ class _DrawingAppState extends State<DrawingApp> {
         });
       } else {
         _timer.cancel();
-        //tambah koin
-        context.read<Player_1Cubit>().addKoinValue((similarity1 * 100).floor());
-        context.read<Player_2Cubit>().addKoinValue((similarity2 * 100).floor());
-
-        //simpan path
         _saveSignaturesToCache();
-
+        context.read<Player_1Cubit>().addKoinValue((double.parse((similarity1.toString().substring(0, 3)))*10).toInt());
+        context.read<Player_2Cubit>().addKoinValue((double.parse((similarity2.toString().substring(0, 3)))*10).toInt());
         Navigator.pushReplacementNamed(context, BuyAnimal.routename);
       }
     });
@@ -94,8 +81,9 @@ class _DrawingAppState extends State<DrawingApp> {
   }
 
   void setLevel() {
+    int babak = context.read<Player_1Cubit>().state.babak;
     setState(() {
-      level = classesModel[0];
+      level = jawaban[babak - 1];
     });
   }
 
@@ -116,7 +104,7 @@ class _DrawingAppState extends State<DrawingApp> {
     if (signatureKey.currentState != null) {
       Uint8List signaturePngBytes = await signatureToPngImage(signatureKey);
       img.Image? imgData = img.decodeImage(signaturePngBytes);
-      img.Image resizedImg = img.copyResize(imgData!, width: 28, height: 28);
+      img.Image resizedImg = img.copyResize(imgData!, width: 224, height: 224);
       img.Image grayscaleImg = img.grayscale(resizedImg);
       Uint8List finalPngBytes = img.encodePng(grayscaleImg);
 
@@ -128,14 +116,14 @@ class _DrawingAppState extends State<DrawingApp> {
 
   Future<List> prediction(Uint8List image) async {
     final interpreter =
-        await tfl.Interpreter.fromAsset('assets/model/model.tflite');
+        await tfl.Interpreter.fromAsset('assets/model/model2.tflite');
 
-    Float32List input = Float32List(28 * 28 * 1);
+    Float32List input = Float32List(1 * 96 * 96 * 1);
     for (int i = 0; i < image.length; i++) {
       input[i] = image[i] / 255.0;
     }
 
-    var output = List.filled(1 * 10, 0).reshape([1, 10]);
+    var output = List.filled(1 * 4, 0).reshape([1, 4]);
 
     interpreter.run(input.buffer.asUint8List(), output);
 
@@ -150,13 +138,13 @@ class _DrawingAppState extends State<DrawingApp> {
       processedImage2 = await preprocessImage(signatureGlobalKey2);
       List resultPrediction1 = await prediction(processedImage1);
       List resultPrediction2 = await prediction(processedImage2);
-      int index = classesModel.indexOf(level);
+      int index = jawaban.indexOf(level);
       setState(() {
         similarity1 = resultPrediction1[0][index];
         similarity2 = resultPrediction2[0][index];
       });
     } catch (e) {
-      rethrow;
+      throw Exception("perfome predikciton and update gagal $e");
     }
   }
 
@@ -246,7 +234,7 @@ class _DrawingAppState extends State<DrawingApp> {
                               RotatedBox(
                                 quarterTurns: 2,
                                 child: Text(
-                                    '${(similarity2 * 100).toStringAsFixed(2)}%',
+                                    "${double.parse((similarity2.toString().substring(0, 3))) * 10}%",
                                     style: jomhuriaBlackGreen20),
                               ),
                             ],
@@ -396,7 +384,8 @@ class _DrawingAppState extends State<DrawingApp> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text('${(similarity1 * 100).toStringAsFixed(2)}%',
+                              Text(
+                                  "${double.parse((similarity1.toString().substring(0, 3))) * 10}%",
                                   style: jomhuriaBlackGreen20),
                               BlocBuilder<Player_1Cubit, Player_1State>(
                                 builder: (context, state) {
@@ -491,7 +480,7 @@ class _DrawingAppState extends State<DrawingApp> {
                             RotatedBox(
                               quarterTurns: 2,
                               child: Text(
-                                  '${(similarity2 * 100).toStringAsFixed(2)}%',
+                                  "${double.parse((similarity2.toString().substring(0, 3))) * 10}%",
                                   style: jomhuriaBlackGreen20),
                             ),
                           ],
@@ -639,7 +628,8 @@ class _DrawingAppState extends State<DrawingApp> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('${(similarity1 * 100).toStringAsFixed(2)}%',
+                            Text(
+                                "${double.parse((similarity2.toString().substring(0, 3))) * 10}%",
                                 style: jomhuriaBlackGreen20),
                             BlocBuilder<Player_1Cubit, Player_1State>(
                               builder: (context, state) {

@@ -58,9 +58,9 @@ class _ResultState extends State<Result> {
         isGajahMenang = false;
         isBadakMenang = true;
       });
-    } else {
+    } else if (totalPoin1 == totalPoin2){
       setState(() {
-        isBadakMenang = false;
+        isGajahMenang = false;
         isBadakMenang = false;
       });
     }

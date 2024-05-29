@@ -1,0 +1,4 @@
+0 Apel
+1 Burung
+2 Lengan
+3 Semut
