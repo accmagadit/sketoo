@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
+import 'package:sketoo/cubit/role/cubit/role_cubit.dart';
 import 'package:sketoo/model/fabel.dart';
 import 'package:sketoo/ui/screen/gameplay/canvas.dart';
 import 'package:sketoo/ui/screen/gameplay/widget/question_board.dart';
@@ -29,19 +30,25 @@ class _QuestionScreenState extends State<QuestionScreen> {
       },
       child: Scaffold(
           body: Stack(
+        alignment: Alignment.center,
         children: [
           Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(imgBackgroundGameplay),
-                    fit: BoxFit.cover),
-              ),
-              child: QuestionBoard(
-                pertanyaan:
-                    pertanyaan[context.read<Player_1Cubit>().state.babak - 1],
-                route: DrawingApp.routename,
-                isQuestion: true,
-              )),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(imgBackgroundInformation),
+                  fit: BoxFit.cover),
+            ),
+            child: QuestionBoard(
+              pertanyaan: context.read<RoleCubit>().state.isAnakOrangTua == true
+                  ? pertanyaanOrtu[
+                      context.read<Player_1Cubit>().state.babak - 1]
+                  : pertanyaanAnak[
+                      context.read<Player_1Cubit>().state.babak - 1],
+              route: DrawingApp.routename,
+              isQuestion: true,
+            ),
+          ),
           PopupKeluar(visible: hasClickPop)
         ],
       )),

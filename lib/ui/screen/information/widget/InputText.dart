@@ -9,13 +9,13 @@ class InputText extends StatefulWidget {
   final ValueChanged<String>? onChanged;
 
   const InputText({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.backgroundColor,
     required this.width,
     required this.height,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<InputText> createState() => _InputTextState();
@@ -48,21 +48,21 @@ class _InputTextState extends State<InputText> {
       child: Center(
         child: TextField(
           controller: _controller,
-          style: inputJua,
+          style: juaBlack20,
           decoration: InputDecoration(
             border: InputBorder.none,
             prefixIcon: const Padding(
               padding: EdgeInsets.only(left: 10.0, right: 10.0),
               child: Icon(
                 Icons.person,
-                color: Colors.white,
+                color: Colors.black,
                 size: 25.0,
               ),
             ),
             hintText: widget.hintText,
             hintStyle: inputJua,
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 6),
+            contentPadding: const EdgeInsets.symmetric(vertical: 3),
             alignLabelWithHint: true,
           ),
           onChanged: widget.onChanged,

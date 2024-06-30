@@ -39,7 +39,7 @@ TextStyle inputJua = const TextStyle(
   fontFamily: "Jua",
   fontSize: 20,
   fontWeight: FontWeight.w500,
-  color: Colors.white,
+  color: Colors.grey,
 );
 
 TextStyle juaGreen15 = TextStyle(
@@ -50,6 +50,12 @@ TextStyle juaGreen15 = TextStyle(
 TextStyle juaBlack15 = const TextStyle(
   color: Colors.black,
   fontSize: 15,
+  fontFamily: 'Jua',
+);
+
+TextStyle juaBlack20 = const TextStyle(
+  color: Colors.black,
+  fontSize: 20,
   fontFamily: 'Jua',
 );
 
@@ -68,16 +74,31 @@ TextStyle poppinsBlack18 = const TextStyle(
     fontFamily: 'Poppins',
     fontWeight: FontWeight.bold);
 
+TextStyle poppinsBlack20 = const TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontFamily: 'Poppins',
+    fontWeight: FontWeight.bold);
+
 // jomhuria
 TextStyle jomhuriaBlackGreen20 =
     TextStyle(color: blackGreen, fontFamily: 'Jomhuria', fontSize: 30);
 
+TextStyle jomhuriaBlack20 =
+    const TextStyle(color: Colors.black, fontFamily: 'Jomhuria', fontSize: 30, fontWeight: FontWeight.bold);
+
 TextStyle jomhuriaWhite20 =
-    TextStyle(color: Colors.white, fontFamily: 'Jomhuria', fontSize: 30);
+    const TextStyle(color: Colors.white, fontFamily: 'Jomhuria', fontSize: 30);
 
 // Monsters
 TextStyle monstersYellow30 = TextStyle(
   color: yellow,
+  fontFamily: 'Monsters',
+  fontSize: 30
+);
+
+TextStyle monstersBlue30 = const TextStyle(
+  color: Color(0xff003E60),
   fontFamily: 'Monsters',
   fontSize: 30
 );

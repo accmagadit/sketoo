@@ -43,12 +43,12 @@ class __HomeScreen extends State<HomeScreen> {
                       height: 200,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(imgLogoApp),
+                          image: AssetImage(imgLogoAppWithoutText),
                         ),
                       ),
                     ),
                   ).animate().scale(duration: 1500.ms, curve: Curves.bounceOut),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 50),
                   const PopupHome().animate().flip(delay: 1500.ms),
                 ],
               ),

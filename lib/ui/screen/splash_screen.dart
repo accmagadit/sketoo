@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sketoo/ui/screen/information/welcome.dart';
 import 'package:sketoo/utils/assets.dart';
+import 'package:sketoo/utils/colors.dart';
 
 class SplashScreen extends StatelessWidget {
   static const routename = "/splash_screen";
@@ -16,15 +17,15 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: Color(0xFFCAEDFF),
+        decoration: BoxDecoration(
+          color: lightGreen,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 200,
-              width: 200,
+              height: 400,
+              width: 400,
               child: Image.asset(imgLogoApp),
             ),
           ],

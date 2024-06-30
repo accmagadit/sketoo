@@ -5,6 +5,7 @@ import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/story.dart';
 import 'package:sketoo/ui/screen/information/widget/CustomButton.dart';
 import 'package:sketoo/ui/screen/information/widget/InputText.dart';
+import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class PopupInputPlayer extends StatelessWidget {
@@ -21,8 +22,8 @@ class PopupInputPlayer extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                   color: const Color(0xFF3C273F).withOpacity(0.1), width: 3),
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD2ABF3), Color(0xFFE2D6ED)],
+              gradient:LinearGradient(
+                colors: [lightBlue, lightBlue],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomRight,
               ),
@@ -55,13 +56,13 @@ class PopupInputPlayer extends StatelessWidget {
               width: 260,
               height: 235,
               decoration: BoxDecoration(
-                color: const Color(0xffdcaedff),
+                color: yellow,
                 borderRadius: BorderRadius.circular(5),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
                       blurStyle: BlurStyle.inner,
-                      color: Colors.white,
-                      offset: Offset(1, 1.5))
+                      color: white,
+                      offset: const Offset(1, 1.5))
                 ],
               ),
               child: Center(
@@ -70,7 +71,7 @@ class PopupInputPlayer extends StatelessWidget {
                   children: [
                     InputText(
                       hintText: "Nama Player 1",
-                      backgroundColor: Color(0xFFFFD900),
+                      backgroundColor: white,
                       width: 200,
                       height: 40,
                       onChanged: (value) {
@@ -84,7 +85,7 @@ class PopupInputPlayer extends StatelessWidget {
                     const SizedBox(height: 20),
                     InputText(
                       hintText: "Nama Player 2",
-                      backgroundColor: Color(0xFFFFD900),
+                      backgroundColor: white,
                       width: 200,
                       height: 40,
                       onChanged: (value) {
@@ -96,16 +97,15 @@ class PopupInputPlayer extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 30),
-                    Container(
-                      child: CustomButton(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(context, StoryScreen.routename);
-                          },
-                          color: Color(0xFFFF6EC9),
-                          text: 'Start!',
-                          height: 45,
-                          width: 135),
-                    ),
+                    CustomButton(
+                        onTap: () {
+                          FocusScope.of(context).unfocus();
+                          Navigator.pushReplacementNamed(context, StoryScreen.routename);
+                        },
+                        color: purple,
+                        text: 'Start!',
+                        height: 45,
+                        width: 135),
                   ],
                 ),
               ),

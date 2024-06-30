@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sketoo/ui/screen/information/input_player.dart';
+import 'package:sketoo/ui/screen/information/role.dart';
 import 'package:sketoo/ui/screen/information/widget/CustomButton.dart';
+import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class PopupHome extends StatelessWidget {
@@ -17,8 +18,8 @@ class PopupHome extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                   color: const Color(0xFF3C273F).withOpacity(0.1), width: 3),
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD2ABF3), Color(0xFFE2D6ED)],
+              gradient: LinearGradient(
+                colors: [lightBlue, lightBlue],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomRight,
               ),
@@ -51,7 +52,7 @@ class PopupHome extends StatelessWidget {
               width: 300,
               height: 130,
               decoration: BoxDecoration(
-                color: const Color(0xffdcaedff),
+                color: yellow,
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: const [
                   BoxShadow(
@@ -66,9 +67,9 @@ class PopupHome extends StatelessWidget {
                   children: [
                     CustomButton(
                         onTap: () {
-                          Navigator.pushNamed(context, InputPlayer.routename);
+                          Navigator.pushNamed(context, RoleScreen.routename);
                         },
-                        color: const Color(0xFFFFD900),
+                        color: const Color(0xFFB1AFFF),
                         text: 'Play',
                         height: 50,
                         width: 120)

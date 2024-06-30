@@ -15,9 +15,9 @@ class DialogShare extends StatelessWidget {
           namaHewan == "badak" ? imgBadakResult : imgGajahResult,
           height: 60,
         ),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
         Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Color(namaHewan == "badak" ? 0xffD4C5FF : 0xffB6E7FF),
             borderRadius: BorderRadius.circular(21),
@@ -25,7 +25,7 @@ class DialogShare extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.25),
                 blurRadius: 4,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),

@@ -50,7 +50,7 @@ class _ConclusionState extends State<Conclusion> {
           children: [
             Positioned.fill(
               child: Image.asset(
-                imgBackgroundResult,
+                imgBackgroundInformation,
                 fit: BoxFit.cover,
               ),
             ),
@@ -59,15 +59,15 @@ class _ConclusionState extends State<Conclusion> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 200,
-                    height: 200,
+                    width: 150,
+                    height: 150,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage(imgLogoApp),
+                        image: AssetImage(imgLogoAppWithoutText),
                       ),
                     ),
                   ).animate().scale(duration: 1500.ms, curve: Curves.bounceOut),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 60),
                   const ScoreConclusion().animate().flip(delay: 1500.ms)
                 ],
               ),

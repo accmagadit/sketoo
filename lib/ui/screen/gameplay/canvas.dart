@@ -11,9 +11,10 @@ import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
+import 'package:sketoo/cubit/role/cubit/role_cubit.dart';
 import 'package:sketoo/model/fabel.dart';
 import 'package:sketoo/ui/screen/gameplay/buy_animal.dart';
-import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
+import 'package:sketoo/ui/screen/gameplay/widget/pop_up_pause.dart';
 import 'package:sketoo/utils/assets.dart';
 import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
@@ -22,7 +23,7 @@ import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 
 class DrawingApp extends StatefulWidget {
   static const routename = "/play_screen";
-  const DrawingApp({Key? key}) : super(key: key);
+  const DrawingApp({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -39,7 +40,7 @@ class _DrawingAppState extends State<DrawingApp> {
   final GlobalKey<SfSignaturePadState> signatureGlobalKey1 = GlobalKey();
   final GlobalKey<SfSignaturePadState> signatureGlobalKey2 = GlobalKey();
   String level = '';
-
+  bool isTimerRunning = true;
   bool hasClickPop = false;
 
   @override
@@ -59,19 +60,18 @@ class _DrawingAppState extends State<DrawingApp> {
 
   void countingTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!isTimerRunning) return; // Tambahkan pengecekan ini
       if (time > 0) {
         _performPredictionAndUpdateSimilarity();
-
         setState(() {
           time--;
         });
       } else {
         _timer.cancel();
         _saveSignaturesToCache();
-        context.read<Player_1Cubit>().addKoinValue(
-            predictSafe(similarity1));
-        context.read<Player_2Cubit>().addKoinValue(
-           predictSafe(similarity2));
+        Navigator.pushReplacementNamed(context, BuyAnimal.routename);
+        context.read<Player_1Cubit>().addKoinValue(predictSafe(similarity1));
+        context.read<Player_2Cubit>().addKoinValue(predictSafe(similarity2));
         Navigator.pushReplacementNamed(context, BuyAnimal.routename);
       }
     });
@@ -83,8 +83,13 @@ class _DrawingAppState extends State<DrawingApp> {
 
   void setLevel() {
     int babak = context.read<Player_1Cubit>().state.babak;
+    bool isOrangTua = context.read<RoleCubit>().state.isAnakOrangTua;
     setState(() {
-      level = jawaban[babak - 1];
+      if (isOrangTua) {
+        level = jawabanOrangTua[babak - 1];
+      } else {
+        level = jawabanTeman[babak - 1];
+      }
     });
   }
 
@@ -124,14 +129,14 @@ class _DrawingAppState extends State<DrawingApp> {
       input[i] = image[i] / 255.0;
     }
 
-    var output = List.filled(1 * 4, 0).reshape([1, 4]);
-
+    var output = List.filled(1 * 8, 0).reshape([1, 8]);
     interpreter.run(input.buffer.asUint8List(), output);
 
     return output;
   }
 
   void _performPredictionAndUpdateSimilarity() async {
+    bool isOrangTua = context.read<RoleCubit>().state.isAnakOrangTua;
     Uint8List processedImage1;
     Uint8List processedImage2;
     try {
@@ -139,12 +144,19 @@ class _DrawingAppState extends State<DrawingApp> {
       processedImage2 = await preprocessImage(signatureGlobalKey2);
       List resultPrediction1 = await prediction(processedImage1);
       List resultPrediction2 = await prediction(processedImage2);
-      int index = jawaban.indexOf(level);
-
-      setState(() {
-        similarity1 = resultPrediction1[0][index];
-        similarity2 = resultPrediction2[0][index];
-      });
+      if (isOrangTua) {
+        int index = jawabanOrangTua.indexOf(level);
+        setState(() {
+          similarity1 = resultPrediction1[0][index];
+          similarity2 = resultPrediction2[0][index];
+        });
+      } else {
+        int index = jawabanTeman.indexOf(level);
+        setState(() {
+          similarity1 = resultPrediction1[0][index + 4];
+          similarity2 = resultPrediction2[0][index + 4];
+        });
+      }
     } catch (e) {
       throw Exception("perfome predikciton and update gagal $e");
     }
@@ -172,10 +184,11 @@ class _DrawingAppState extends State<DrawingApp> {
   int predictSafe(double similarity) {
     if ((double.parse((similarity.toString().substring(0, 3))) * 10).toInt() <=
         10) {
-      return (double.parse((similarity.toString().substring(0, 3))) * 100).toInt();
-    }
-    else{
-      return (double.parse((similarity.toString().substring(0, 3))) * 10).toInt();
+      return (double.parse((similarity.toString().substring(0, 3))) * 100)
+          .toInt();
+    } else {
+      return (double.parse((similarity.toString().substring(0, 3))) * 10)
+          .toInt();
     }
   }
 
@@ -193,16 +206,17 @@ class _DrawingAppState extends State<DrawingApp> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(imgBackgroundGameplay),
+                            image: AssetImage(imgBackgroundInformation),
                             fit: BoxFit.cover),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           //player 1
+                          const SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -214,6 +228,17 @@ class _DrawingAppState extends State<DrawingApp> {
                                     },
                                     child: Image.asset(iconHapus)),
                               ),
+                              RotatedBox(
+                                quarterTurns: 2,
+                                child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        hasClickPop = !hasClickPop;
+                                        isTimerRunning = !isTimerRunning;
+                                      });
+                                    },
+                                    child: Image.asset(iconPause)),
+                              ),
                               BlocBuilder<Player_2Cubit, Player_2State>(
                                 builder: (context, state) {
                                   return RotatedBox(
@@ -222,7 +247,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                       children: [
                                         Image.asset(iconKoin),
                                         Text("${state.koin}",
-                                            style: jomhuriaBlackGreen20),
+                                            style: jomhuriaBlack20),
                                       ],
                                     ),
                                   );
@@ -230,46 +255,44 @@ class _DrawingAppState extends State<DrawingApp> {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              RotatedBox(
-                                quarterTurns: 2,
-                                child:
-                                    BlocBuilder<Player_2Cubit, Player_2State>(
-                                  builder: (context, state) {
-                                    return Text(state.nama,
-                                        style: jomhuriaBlackGreen20);
-                                  },
-                                ),
-                              ),
-                              RotatedBox(
-                                quarterTurns: 2,
-                                child: Text(
-                                    "${predictSafe(similarity2)}%",
-                                    style: jomhuriaBlackGreen20),
-                              ),
-                            ],
-                          ),
                           RotatedBox(
                             quarterTurns: 2,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: Container(
-                                height: screenWidth / 1.8,
-                                width: screenWidth / 1.4,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2,
-                                        color: const Color(0xFF7D4E23))),
-                                child: SfSignaturePad(
-                                  key: signatureGlobalKey2,
-                                  minimumStrokeWidth: 3,
-                                  maximumStrokeWidth: 3,
-                                  strokeColor: Colors.black,
-                                  backgroundColor: Colors.white,
+                            child: Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: screenWidth / 1.8,
+                                        width: screenWidth / 1.4,
+                                        child: SfSignaturePad(
+                                          key: signatureGlobalKey2,
+                                          minimumStrokeWidth: 3,
+                                          maximumStrokeWidth: 3,
+                                          strokeColor: Colors.black,
+                                          backgroundColor: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    BlocBuilder<Player_2Cubit, Player_2State>(
+                                      builder: (context, state) {
+                                        return Text(state.nama,
+                                            style: juaBlack15);
+                                      },
+                                    ),
+                                    Text("${predictSafe(similarity2)}%",
+                                        style: juaBlack15),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
 
@@ -308,7 +331,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                               quarterTurns: 2,
                                               child: Image.asset(
                                                   "assets/gameplay/$hewan.png",
-                                                  height: 30),
+                                                  height: 40),
                                             ),
                                         ],
                                       );
@@ -341,7 +364,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                     child: Center(
                                       child: Text(
                                         '$time',
-                                        style: poppinsWhite20, // Teks putih
+                                        style: poppinsBlack18, // Teks putih
                                       ),
                                     ),
                                   ),
@@ -352,7 +375,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                           for (var hewan in state.pasukanHewan)
                                             Image.asset(
                                                 "assets/gameplay/$hewan.png",
-                                                height: 30),
+                                                height: 40),
                                         ],
                                       );
                                     },
@@ -373,40 +396,41 @@ class _DrawingAppState extends State<DrawingApp> {
                           ),
 
                           const SizedBox(height: 10),
-                          //player 2
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: Container(
-                              height: screenWidth / 1.8,
-                              width: screenWidth / 1.4,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 2,
-                                      color: const Color(0xFF7D4E23))),
-                              child: SfSignaturePad(
-                                key: signatureGlobalKey1,
-                                minimumStrokeWidth: 3,
-                                maximumStrokeWidth: 3,
-                                strokeColor: Colors.black,
-                                backgroundColor: Colors.white,
-                              ),
-                            ),
-                          ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          //player 1
+                          Stack(
+                            alignment: Alignment.topCenter,
                             children: [
-                              Text(
-                                 "${predictSafe(similarity1)}%",
-                                  style: jomhuriaBlackGreen20),
-                              BlocBuilder<Player_1Cubit, Player_1State>(
-                                builder: (context, state) {
-                                  return Text(state.nama,
-                                      style: jomhuriaBlackGreen20);
-                                },
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: SizedBox(
+                                  height: screenWidth / 1.8,
+                                  width: screenWidth / 1.4,
+                                  child: SfSignaturePad(
+                                    key: signatureGlobalKey1,
+                                    minimumStrokeWidth: 3,
+                                    maximumStrokeWidth: 3,
+                                    strokeColor: Colors.black,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  BlocBuilder<Player_1Cubit, Player_1State>(
+                                    builder: (context, state) {
+                                      return Text(state.nama,
+                                          style: juaBlack15);
+                                    },
+                                  ),
+                                  Text("${predictSafe(similarity1)}%",
+                                      style: juaBlack15),
+                                ],
                               ),
                             ],
                           ),
+
                           BlocBuilder<Player_1Cubit, Player_1State>(
                             builder: (context, state) {
                               return Row(
@@ -417,9 +441,17 @@ class _DrawingAppState extends State<DrawingApp> {
                                     children: [
                                       Image.asset(iconKoin),
                                       Text('${state.koin}',
-                                          style: jomhuriaBlackGreen20),
+                                          style: jomhuriaBlack20),
                                     ],
                                   ),
+                                  InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          hasClickPop = !hasClickPop;
+                                          isTimerRunning = !isTimerRunning;
+                                        });
+                                      },
+                                      child: Image.asset(iconPause)),
                                   InkWell(
                                       onTap: () {
                                         cleanCanvas(signatureGlobalKey1);
@@ -432,7 +464,23 @@ class _DrawingAppState extends State<DrawingApp> {
                         ],
                       ),
                     ),
-                    PopupKeluar(visible: hasClickPop)
+                    Visibility(
+                      visible: hasClickPop,
+                      child: Container(
+                        height: screenHeight,
+                        width: screenWidth,
+                        color: white.withOpacity(0.3),
+                      ),
+                    ),
+                    PopupPause(
+                      visible: hasClickPop,
+                      onPlayPausePressed: () {
+                        setState(() {
+                          hasClickPop = false;
+                          isTimerRunning = true;
+                        });
+                      },
+                    ),
                   ],
                 ),
               )
@@ -441,16 +489,17 @@ class _DrawingAppState extends State<DrawingApp> {
                 alignment: Alignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    alignment: Alignment.center,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage(imgBackgroundGameplay),
+                          image: AssetImage(imgBackgroundInformation),
                           fit: BoxFit.cover),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         //player 1
+                        const SizedBox(height: 30),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -462,6 +511,17 @@ class _DrawingAppState extends State<DrawingApp> {
                                   },
                                   child: Image.asset(iconHapus)),
                             ),
+                            RotatedBox(
+                              quarterTurns: 2,
+                              child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      hasClickPop = !hasClickPop;
+                                      isTimerRunning = !isTimerRunning;
+                                    });
+                                  },
+                                  child: Image.asset(iconPause)),
+                            ),
                             BlocBuilder<Player_2Cubit, Player_2State>(
                               builder: (context, state) {
                                 return RotatedBox(
@@ -470,7 +530,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                     children: [
                                       Image.asset(iconKoin),
                                       Text("${state.koin}",
-                                          style: jomhuriaBlackGreen20),
+                                          style: jomhuriaBlack20),
                                     ],
                                   ),
                                 );
@@ -478,45 +538,44 @@ class _DrawingAppState extends State<DrawingApp> {
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            RotatedBox(
-                              quarterTurns: 2,
-                              child: BlocBuilder<Player_2Cubit, Player_2State>(
-                                builder: (context, state) {
-                                  return Text(state.nama,
-                                      style: jomhuriaBlackGreen20);
-                                },
-                              ),
-                            ),
-                            RotatedBox(
-                              quarterTurns: 2,
-                              child: Text(
-                                  "${predictSafe(similarity2)}%",
-                                  style: jomhuriaBlackGreen20),
-                            ),
-                          ],
-                        ),
                         RotatedBox(
                           quarterTurns: 2,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
-                            child: Container(
-                              height: screenWidth / 1.8,
-                              width: screenWidth / 1.4,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 2,
-                                      color: const Color(0xFF7D4E23))),
-                              child: SfSignaturePad(
-                                key: signatureGlobalKey2,
-                                minimumStrokeWidth: 3,
-                                maximumStrokeWidth: 3,
-                                strokeColor: Colors.black,
-                                backgroundColor: Colors.white,
+                          child: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: screenWidth / 1.8,
+                                      width: screenWidth / 1.4,
+                                      child: SfSignaturePad(
+                                        key: signatureGlobalKey2,
+                                        minimumStrokeWidth: 3,
+                                        maximumStrokeWidth: 3,
+                                        strokeColor: Colors.black,
+                                        backgroundColor: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  BlocBuilder<Player_2Cubit, Player_2State>(
+                                    builder: (context, state) {
+                                      return Text(state.nama,
+                                          style: juaBlack15);
+                                    },
+                                  ),
+                                  Text("${predictSafe(similarity2)}%",
+                                      style: juaBlack15),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
 
@@ -554,7 +613,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                             quarterTurns: 2,
                                             child: Image.asset(
                                                 "assets/gameplay/$hewan.png",
-                                                height: 30),
+                                                height: 40),
                                           ),
                                       ],
                                     );
@@ -587,7 +646,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                   child: Center(
                                     child: Text(
                                       '$time',
-                                      style: poppinsWhite20, // Teks putih
+                                      style: poppinsBlack18, // Teks putih
                                     ),
                                   ),
                                 ),
@@ -598,7 +657,7 @@ class _DrawingAppState extends State<DrawingApp> {
                                         for (var hewan in state.pasukanHewan)
                                           Image.asset(
                                               "assets/gameplay/$hewan.png",
-                                              height: 30),
+                                              height: 40),
                                       ],
                                     );
                                   },
@@ -619,39 +678,39 @@ class _DrawingAppState extends State<DrawingApp> {
                         ),
 
                         const SizedBox(height: 10),
-                        //player 2
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            height: screenWidth / 1.8,
-                            width: screenWidth / 1.4,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 2, color: const Color(0xFF7D4E23))),
-                            child: SfSignaturePad(
-                              key: signatureGlobalKey1,
-                              minimumStrokeWidth: 3,
-                              maximumStrokeWidth: 3,
-                              strokeColor: Colors.black,
-                              backgroundColor: Colors.white,
-                            ),
-                          ),
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //player 1
+                        Stack(
+                          alignment: Alignment.topCenter,
                           children: [
-                            Text(
-                               "${predictSafe(similarity1)}%",
-                                style: jomhuriaBlackGreen20),
-                            BlocBuilder<Player_1Cubit, Player_1State>(
-                              builder: (context, state) {
-                                return Text(state.nama,
-                                    style: jomhuriaBlackGreen20);
-                              },
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: SizedBox(
+                                height: screenWidth / 1.8,
+                                width: screenWidth / 1.4,
+                                child: SfSignaturePad(
+                                  key: signatureGlobalKey1,
+                                  minimumStrokeWidth: 3,
+                                  maximumStrokeWidth: 3,
+                                  strokeColor: Colors.black,
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                BlocBuilder<Player_1Cubit, Player_1State>(
+                                  builder: (context, state) {
+                                    return Text(state.nama, style: juaBlack15);
+                                  },
+                                ),
+                                Text("${predictSafe(similarity1)}%",
+                                    style: juaBlack15),
+                              ],
                             ),
                           ],
                         ),
+
                         BlocBuilder<Player_1Cubit, Player_1State>(
                           builder: (context, state) {
                             return Row(
@@ -661,9 +720,17 @@ class _DrawingAppState extends State<DrawingApp> {
                                   children: [
                                     Image.asset(iconKoin),
                                     Text('${state.koin}',
-                                        style: jomhuriaBlackGreen20),
+                                        style: jomhuriaBlack20),
                                   ],
                                 ),
+                                InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        hasClickPop = !hasClickPop;
+                                        isTimerRunning = !isTimerRunning;
+                                      });
+                                    },
+                                    child: Image.asset(iconPause)),
                                 InkWell(
                                     onTap: () {
                                       cleanCanvas(signatureGlobalKey1);
@@ -676,7 +743,23 @@ class _DrawingAppState extends State<DrawingApp> {
                       ],
                     ),
                   ),
-                  PopupKeluar(visible: hasClickPop)
+                  Visibility(
+                    visible: hasClickPop,
+                    child: Container(
+                      height: screenHeight,
+                      width: screenWidth,
+                      color: white.withOpacity(0.3),
+                    ),
+                  ),
+                  PopupPause(
+                    visible: hasClickPop,
+                    onPlayPausePressed: () {
+                      setState(() {
+                        hasClickPop = false;
+                        isTimerRunning = true;
+                      });
+                    },
+                  ),
                 ],
               ),
       ),

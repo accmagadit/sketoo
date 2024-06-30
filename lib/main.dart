@@ -1,7 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:sketoo/cubit/role/cubit/role_cubit.dart';
 import 'package:sketoo/ui/screen/gameplay/share.dart';
 import 'package:sketoo/ui/screen/information/exit.dart';
+import 'package:sketoo/ui/screen/information/role.dart';
 import 'package:sketoo/ui/screen/information/welcome.dart';
 import 'package:sketoo/ui/screen/information/input_player.dart';
 import 'package:sketoo/ui/screen/splash_screen.dart';
@@ -67,6 +69,12 @@ void main() {
         create: (context) => Player_2Cubit(),
         child: const Conclusion(),
       ),
+
+      //ROLE
+      BlocProvider(
+        create: (context) => RoleCubit(),
+        child: const RoleScreen(),
+      )
     ],
     child: const MyApp(),
   ));
@@ -82,6 +90,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late AudioPlayer _audioPlayer;
 
+  @override
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
@@ -120,7 +129,8 @@ class _MyAppState extends State<MyApp> {
         // Information
         Exit.routename: (context) => const Exit(),
         HomeScreen.routename: (context) => const HomeScreen(),
-        InputPlayer.routename: (context) => const InputPlayer()
+        InputPlayer.routename: (context) => const InputPlayer(),
+        RoleScreen.routename: (context) => const RoleScreen(),
       },
       //auth
 

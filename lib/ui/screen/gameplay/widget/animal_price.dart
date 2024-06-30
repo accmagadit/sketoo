@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
 import 'package:sketoo/utils/assets.dart';
+import 'package:sketoo/utils/colors.dart';
+import 'package:sketoo/utils/typograhpy.dart';
 
 class HargaHewan extends StatelessWidget {
   final String namaGambar;
@@ -11,11 +13,11 @@ class HargaHewan extends StatelessWidget {
   final int player;
 
   const HargaHewan({
-    Key? key,
+    super.key,
     required this.namaGambar,
     required this.harga,
     required this.player,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +36,12 @@ class HargaHewan extends StatelessWidget {
         children: [
           Image.asset(
             "assets/gameplay/$namaGambar.png",
-            height: 80,
+            height: 120,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 24),
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: lightBlue,
               borderRadius:
                   BorderRadius.circular(12), 
               boxShadow: [
@@ -57,7 +59,7 @@ class HargaHewan extends StatelessWidget {
                     width: 4), // Add some space between the image and the text
                 Text(
                   harga.toString(),
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: poppinsBlack20,
                 ),
               ],
             ),
@@ -76,12 +78,12 @@ class HargaHewan extends StatelessWidget {
         children: [
           Image.asset(
             "assets/gameplay/$namaGambar.png",
-            height: 80,
+            height: 120,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 24),
             decoration: BoxDecoration(
-              color: Color(0xffeeeeee).withOpacity(0.5),
+              color: const Color(0xffeeeeee).withOpacity(0.5),
               borderRadius:
                   BorderRadius.circular(12), 
               boxShadow: [
@@ -99,7 +101,7 @@ class HargaHewan extends StatelessWidget {
                     width: 4), // Add some space between the image and the text
                 Text(
                   harga.toString(),
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: poppinsBlack20,
                 ),
               ],
             ),

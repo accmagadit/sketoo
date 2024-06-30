@@ -8,6 +8,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
+import 'package:sketoo/model/list_hewan.dart';
 import 'package:sketoo/ui/screen/gameplay/conclusion.dart';
 import 'package:sketoo/ui/screen/gameplay/widget/dialog_share.dart';
 import 'package:sketoo/utils/assets.dart';
@@ -61,16 +62,6 @@ class _ShareScreenState extends State<ShareScreen> {
   }
 
   void isWinnerShare() {
-    Map<String, int> hewanPoin1 = {
-      "kelinci": 30,
-      "monyet": 55,
-      "gajah": 95,
-    };
-    Map<String, int> hewanPoin2 = {
-      "kelinci": 30,
-      "monyet": 55,
-      "badak": 95,
-    };
     List<String> pasukanPlayer1 =
         context.read<Player_1Cubit>().state.pasukanHewan;
     List<String> pasukanPlayer2 =
@@ -132,9 +123,10 @@ class _ShareScreenState extends State<ShareScreen> {
                     ? SizedBox(
                         child: Container(
                           padding: const EdgeInsets.all(20),
+                          alignment: Alignment.center,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage(imgBackgroundResult),
+                                image: AssetImage(imgBackgroundInformation),
                                 fit: BoxFit.cover),
                           ),
                           child: Stack(
@@ -219,7 +211,7 @@ class _ShareScreenState extends State<ShareScreen> {
                                         quarterTurns: 2,
                                         child: Text(
                                           "Sketoo",
-                                          style: monstersYellow30,
+                                          style: monstersBlue30,
                                         ),
                                       )
                                     ],
@@ -349,7 +341,7 @@ class _ShareScreenState extends State<ShareScreen> {
                                       ),
                                       Text(
                                         "Sketoo",
-                                        style: monstersYellow30,
+                                        style: monstersBlue30,
                                       )
                                     ],
                                   ),
@@ -379,9 +371,10 @@ class _ShareScreenState extends State<ShareScreen> {
                     // layar diatas 750
                     : Container(
                         padding: const EdgeInsets.all(20),
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage(imgBackgroundResult),
+                              image: AssetImage(imgBackgroundInformation),
                               fit: BoxFit.cover),
                         ),
                         child: Stack(
@@ -462,7 +455,7 @@ class _ShareScreenState extends State<ShareScreen> {
                                       quarterTurns: 2,
                                       child: Text(
                                         "Sketoo",
-                                        style: monstersYellow30,
+                                        style: monstersBlue30,
                                       ),
                                     )
                                   ],
@@ -590,7 +583,7 @@ class _ShareScreenState extends State<ShareScreen> {
                                     ),
                                     Text(
                                       "Sketoo",
-                                      style: monstersYellow30,
+                                      style: monstersBlue30,
                                     )
                                   ],
                                 ),

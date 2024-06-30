@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
+import 'package:sketoo/model/list_hewan.dart';
 import 'package:sketoo/ui/screen/gameplay/share.dart';
 import 'package:sketoo/ui/screen/gameplay/widget/pop_up_pemenang.dart';
 import 'package:sketoo/ui/screen/information/widget/PopupKeluar.dart';
@@ -11,7 +12,7 @@ import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class Result extends StatefulWidget {
-  const Result({Key? key}) : super(key: key);
+  const Result({super.key});
   static const routename = "/result_screen";
 
   @override
@@ -22,19 +23,10 @@ class Result extends StatefulWidget {
 class _ResultState extends State<Result> {
   bool isBadakMenang = false;
   bool isGajahMenang = false;
+  bool isSeri = false;
   bool hasClickPop = false;
 
   void isWinner() {
-    Map<String, int> hewanPoin1 = {
-      "kelinci": 30,
-      "monyet": 55,
-      "gajah": 95,
-    };
-    Map<String, int> hewanPoin2 = {
-      "kelinci": 30,
-      "monyet": 55,
-      "badak": 95,
-    };
     List<String> pasukanPlayer1 =
         context.read<Player_1Cubit>().state.pasukanHewan;
     List<String> pasukanPlayer2 =
@@ -49,34 +41,21 @@ class _ResultState extends State<Result> {
     }
 
     if (totalPoin1 > totalPoin2) {
-      setState(() {
-        isGajahMenang = true;
-        isBadakMenang = false;
-      });
+      isGajahMenang = true;
+      isBadakMenang = false;
+      isSeri = false;
     } else if (totalPoin1 < totalPoin2) {
-      setState(() {
-        isGajahMenang = false;
-        isBadakMenang = true;
-      });
-    } else if (totalPoin1 == totalPoin2){
-      setState(() {
-        isGajahMenang = false;
-        isBadakMenang = false;
-      });
+      isGajahMenang = false;
+      isBadakMenang = true;
+      isSeri = false;
+    } else {
+      isGajahMenang = false;
+      isBadakMenang = false;
+      isSeri = true; // Kondisi seri
     }
   }
 
   List<Widget> hasilTarikan() {
-    Map<String, int> hewanPoin1 = {
-      "kelinci": 30,
-      "monyet": 55,
-      "gajah": 95,
-    };
-    Map<String, int> hewanPoin2 = {
-      "kelinci": 30,
-      "monyet": 55,
-      "badak": 95,
-    };
     List<String> pasukanPlayer1 =
         context.read<Player_1Cubit>().state.pasukanHewan;
     List<String> pasukanPlayer2 =
@@ -139,7 +118,7 @@ class _ResultState extends State<Result> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(imgBackgroundGameplay), fit: BoxFit.cover),
+                  image: AssetImage(imgBackgroundInformation), fit: BoxFit.cover),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

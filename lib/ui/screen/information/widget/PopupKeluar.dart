@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sketoo/ui/screen/information/widget/CustomButton.dart';
+import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class PopupKeluar extends StatefulWidget {
@@ -25,8 +26,8 @@ class _PopupKeluarState extends State<PopupKeluar> {
               decoration: BoxDecoration(
                 border: Border.all(
                     color: const Color(0xFF3C273F).withOpacity(0.1), width: 3),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFD2ABF3), Color(0xFFE2D6ED)],
+                gradient: LinearGradient(
+                  colors: [lightBlue, const Color(0xFFE2D6ED)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomRight,
                 ),
@@ -59,7 +60,7 @@ class _PopupKeluarState extends State<PopupKeluar> {
                 width: 300,
                 height: 135,
                 decoration: BoxDecoration(
-                  color: const Color(0xffdcaedff),
+                  color: yellow,
                   borderRadius: BorderRadius.circular(5),
                   boxShadow: const [
                     BoxShadow(
@@ -77,7 +78,7 @@ class _PopupKeluarState extends State<PopupKeluar> {
                           widget.visible = false;
                         });
                       },
-                      color: Color(0xFFFF6EC9),
+                      color: purple,
                       text: 'Tidak',
                       height: 40,
                       width: 100,
@@ -87,7 +88,7 @@ class _PopupKeluarState extends State<PopupKeluar> {
                       onTap: () {
                         SystemNavigator.pop();
                       },
-                      color: Color(0xFFFFEF96),
+                      color: lightGreen,
                       text: 'Ya',
                       height: 40,
                       width: 100,

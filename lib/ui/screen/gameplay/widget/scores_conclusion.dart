@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sketoo/cubit/player_1/cubit/player_1_cubit.dart';
 import 'package:sketoo/cubit/player_2/cubit/player_2_cubit.dart';
+import 'package:sketoo/model/list_hewan.dart';
 import 'package:sketoo/utils/assets.dart';
+import 'package:sketoo/utils/colors.dart';
 import 'package:sketoo/utils/typograhpy.dart';
 
 class ScoreConclusion extends StatelessWidget {
@@ -20,8 +21,8 @@ class ScoreConclusion extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                   color: const Color(0xFF3C273F).withOpacity(0.1), width: 3),
-              gradient: const LinearGradient(
-                colors: [Color(0xFFD2ABF3), Color(0xFFE2D6ED)],
+              gradient: LinearGradient(
+                colors: [lightBlue, const Color(0xFFE2D6ED)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomRight,
               ),
@@ -54,7 +55,7 @@ class ScoreConclusion extends StatelessWidget {
                 width: 300,
                 height: 135,
                 decoration: BoxDecoration(
-                  color: const Color(0xffdcaedff),
+                  color: yellow,
                   borderRadius: BorderRadius.circular(5),
                   boxShadow: const [
                     BoxShadow(
@@ -70,16 +71,16 @@ class ScoreConclusion extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          imgGajahResult,
+                          imgBadakResult,
                           height: 40,
                         ),
                         Image.asset(
-                          imgBadakResult,
+                          imgGajahResult,
                           height: 40,
                         ),
                       ],
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,15 +95,10 @@ class ScoreConclusion extends StatelessWidget {
                         ),
                         BlocBuilder<Player_1Cubit, Player_1State>(
                           builder: (context, state) {
-                            Map<String, int> hewanPoin = {
-                              "kelinci": 30,
-                              "monyet": 55,
-                              "gajah": 95,
-                            };
                             List<String> pasukan = state.pasukanHewan;
                             int totalPoin = 0;
                             for (String hewan in pasukan) {
-                              totalPoin += hewanPoin[hewan]!;
+                              totalPoin += hewanPoin1[hewan]!;
                             }
                             return Text(
                               "$totalPoin",
@@ -120,15 +116,10 @@ class ScoreConclusion extends StatelessWidget {
                         ),
                         BlocBuilder<Player_2Cubit, Player_2State>(
                           builder: (context, state) {
-                            Map<String, int> hewanPoin = {
-                              "kelinci": 30,
-                              "monyet": 55,
-                              "badak": 95,
-                            };
                             List<String> pasukan = state.pasukanHewan;
                             int totalPoin = 0;
                             for (String hewan in pasukan) {
-                              totalPoin += hewanPoin[hewan]!;
+                              totalPoin += hewanPoin2[hewan]!;
                             }
                             return Text(
                               "$totalPoin",
